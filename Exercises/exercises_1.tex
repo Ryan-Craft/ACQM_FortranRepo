@@ -1,0 +1,199 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts,amssymb,amsmath,mathbbol,amsthm,amstext,esint,mathtools,nccmath,upgreek}
+\graphicspath{ {./Images/} }
+\setlength{\jot}{0.5cm}
+\DeclareSymbolFontAlphabet{\mathbb}{AMSb}
+\DeclareSymbolFontAlphabet{\mathbbl}{bbold}
+\usepackage{graphics,graphicx,epsfig,ulem, xcolor, soul}
+\usepackage[margin={2cm,2cm}]{geometry}
+\usepackage{tikz,pgfplots}
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{physics, amsmath}
+\usepackage{float}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage[american,siunitx]{circuitikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.3}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\let\oldhat\hat
+\renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+\AtBeginDocument{
+\heavyrulewidth=.08em
+\lightrulewidth=.05em
+\cmidrulewidth=.03em
+\belowrulesep=.65ex
+\belowbottomsep=0pt
+\aboverulesep=.4ex
+\abovetopsep=0pt
+\cmidrulesep=\doublerulesep
+\cmidrulekern=.5em
+\defaultaddspace=.5em
+}
+
+
+\begin{document}
+\newpage
+\begin{center}
+       
+       \vspace*{1cm}
+        \LARGE
+       \textbf{Assignment 2a}
+
+       \vspace{0.5cm}
+        PHYS4000
+        Advanced Computational Quantum Mechanics
+            
+       \vspace{1.5cm}
+
+       \text{Ryan Craft}\bigskip
+
+       Unit Coordinated by\\
+       Dr. Igor Bray
+            
+       \vspace{0.8cm}
+     
+            
+       
+       May 2023
+            
+\end{center}
+\newpage
+
+
+
+\section{Question 1}
+
+Equation 2.17 is written as:
+
+    \begin{gather}
+        \frac{d^2u_l(r)}{dr^2} + 2(E+\frac{Z}{r}) u_l(r) = l(l+1)\frac{u_l(r)}{r^2}
+    \end{gather}
+
+    First we need to make $\rho$ the subject of the function which is done through the substitution of
+    $\rho=kr$.
+
+    \begin{gather}
+        k^2 \frac{d^2u_l(\rho)}{d\rho^2} + 2(-\frac{k^2}{8}+\frac{Z}{\rho k})u_l(\rho) =  l(l+1)\frac{u_l(\rho)k^2}{\rho^2}
+    \end{gather}
+
+    Where we have substituted for $E$ by rearranging the definition of $k=2\sqrt{-2E}$. 
+    We further simplify the differential Equation to the following by cancelling rho and multiplying the bracket:
+
+    \begin{gather}
+        \frac{d^2u_l(\rho)}{d\rho^2} - (\frac{1}{4}-\frac{2Z}{\rho k})u_l(\rho) =  l(l+1)\frac{u_l(\rho)}{\rho^2}
+    \end{gather}
+
+    In finding the solutions to the differential equation we rearrange it into the form\dots
+
+    \begin{gather}
+        \frac{d^2u_l(\rho)}{d\rho^2} - (\frac{1}{4}-\frac{2Z}{\rho k})u_l(\rho) - l(l+1)\frac{u_l(\rho)}{\rho^2} = 0
+    \end{gather}
+
+
+    The question presents the substitution $u_l(\rho)=\rho^{l+1}\exp{-\rho/2}\omega(\rho)$, which forms\dots
+
+    \begin{gather}
+        \frac{d^2}{d\rho^2}[\rho^{l+1}\exp{-\rho/2}\omega(\rho)] - (\frac{1}{4}-\frac{2Z}{\rho k})(\rho^{l+1}\exp{-\rho/2}\omega(\rho))
+        - l(l+1)\rho^{l-1}\exp{-\rho/2}\omega(\rho) = 0
+    \end{gather}
+    \medskip
+    
+    {\centering
+    \begin{gather*}
+        (l+1)[(l\rho^{l-1}\exp{-\rho/2}-\frac{1}{2}\rho^{l+1}\exp{-\rho/2})\omega(\rho) + \rho^l \exp{-\rho/2}\frac{d\omega(\rho)}{d\rho}]\\
+        - \frac{1}{2}\{  [(l+1) \rho^l \exp{-\rho/2} 
+        - \frac{1}{2}\rho^{l+1}\exp{-\rho/2}]\omega(\rho) 
+        + \frac{d\omega(\rho)}{d\rho^2}\rho^{l+1}\exp{-\rho/2}\}\\ 
+        +[(l+1)\rho^l\exp{-\rho/2}-\frac{1}{2}\rho^{l+1}\exp{-\rho/2}]\frac{d\omega(\rho)}{d\rho} + \frac{d^2\omega(\rho)}{d\rho^2}\rho^{l+1}\exp{-\rho/2}\\
+        - (\frac{1}{4}-\frac{2Z}{k\rho})\rho^{l+1}\exp{-\rho/2}\omega(\rho) - l(l+1)\rho^{l-1}\exp{-\rho/2}\omega(\rho)
+        = 0
+    \end{gather*}
+    }
+
+    and simplifies to
+
+    \begin{gather}
+        \frac{d^2\omega(\rho)}{d\rho^2}\rho^{l+1} + \frac{d\omega(\rho)}{d\rho}[2(l+1)\rho^l - \rho^{l+1}] - \omega(\rho)[(l+1)\rho^l - \frac{2Z}{k}\rho^l]
+        =0
+    \end{gather}
+
+    We now eliminate $\rho^l$ on all terms to get:
+
+    \begin{gather}
+        \frac{d^2\omega(\rho)}{d\rho^2}\rho + [2(l+1) - \rho]\frac{d\omega(\rho)}{d\rho} - [(l+1) - \frac{2Z}{k}]\omega(\rho)
+        =0
+    \end{gather}
+    
+    This differential equation has the form:
+
+    \begin{gather}
+        z\frac{d^2w}{dz^2} + (b-z)\frac{dw}{dz} - aw = 0
+    \end{gather}
+
+    Which has solutions in the confluent hypergeometric function;
+
+    \begin{gather}
+        F(a,b;\rho) = 1 + \frac{a}{b}\frac{\rho}{1!} + \frac{a}{b}\frac{(a+1)}{(b+1)}\frac{\rho^2}{2!} + \dots
+    \end{gather}
+    
+    In this case, the function will truncate so long as $a=1-n$ for $n=1,2,3$,
+    in this way, after the $n+1$ term of the series and all subsequent terms must simplify to zero.
+
+    In this case then by comparing the equation we have with the general form, we can see that
+
+    \begin{align}
+        a &= l+1 - \frac{2Z}{k}\\
+        b &= 2(l+1)
+    \end{align}
+
+    And knowing that the differential equation is has the general solution and that the series terminates, we know that this set of
+    equations satisfies the conditions for a solution of $\omega(\rho)$.
+
+
+
+\section{Question 2}
+
+    The equation:
+
+    \begin{gather}
+        F(a,b;\rho) = 1 + \frac{a}{b}\frac{\rho}{1!} + \frac{a}{b}\frac{(a+1)}{(b+1)}\frac{\rho^2}{2!} + \dots
+    \end{gather}
+
+    Terminates for $a = 1 - n$, for $n \in \{1,2,3,\dots\}$. 
+    This prevents the series from growing exponentially in $\rho$.\\
+
+    In our case, we have $a = 1 + l - \frac{2Z}{k}$, which can be rewritten as $a = 1 - (\frac{2Z}{k}-l)$.\\
+    This makes our $n = \frac{2Z}{k}-l$ and subsequently $n+l=\frac{2Z}{k}$.\\ 
+    \smallskip
+    We then write $n=\frac{2Z}{k}, \;\forall\; n \in \{1 + l, 2 + l, 3 + l, \dots$\}.\\
+
+\section{Question 3}
+
+    2.28 states:
+
+    \begin{gather}
+        \int_{E}^{yee}
+    \end{gather}
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
