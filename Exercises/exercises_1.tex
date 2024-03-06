@@ -79,11 +79,11 @@ Equation 2.17 is written as:
     $\rho=kr$.
 
     \begin{gather}
-        k^2 \frac{d^2u_l(\rho)}{d\rho^2} + 2(-\frac{k^2}{8}+\frac{Z}{\rho k})u_l(\rho) =  l(l+1)\frac{u_l(\rho)k^2}{\rho^2}
+        k^2 \frac{d^2u_l(\rho)}{d\rho^2} + 2(-\frac{k^2}{8}+\frac{Zk}{\rho})u_l(\rho) =  l(l+1)\frac{u_l(\rho)k^2}{\rho^2}
     \end{gather}
 
     Where we have substituted for $E$ by rearranging the definition of $k=2\sqrt{-2E}$. 
-    We further simplify the differential Equation to the following by cancelling rho and multiplying the bracket:
+    We further simplify the differential Equation to the following by cancelling $k^2$ and multiplying the bracket:
 
     \begin{gather}
         \frac{d^2u_l(\rho)}{d\rho^2} - (\frac{1}{4}-\frac{2Z}{\rho k})u_l(\rho) =  l(l+1)\frac{u_l(\rho)}{\rho^2}
@@ -178,18 +178,137 @@ Equation 2.17 is written as:
     2.28 states:
 
     \begin{gather}
-        \int_{E}^{yee}
+        \int_{0}^{\infty}dr u_{n'l}(r) u_{nl}(r) = \delta_{n'n}
+    \end{gather}
+    
+    Which tell us that the eigenstates are orthogonal and normalised for $n=n'$, where the kronecker delta equals unity.
+    This will allow us to calculate the normalisation coefficients for our wave-functions, $u_{21}(r)$ and $u_{31}(r)$.\medskip
+
+    For $\mathbf{u_{21}(r)}$;\smallskip
+
+    First we establish what we are substituting for $\rho$, with $Z=1,\; n=2, \; l=1$:
+
+    \begin{gather*}
+        \rho = kr = \frac{2Zr}{n}\\
+        \rho = kr = \frac{2(1)r}{2} = r\\
+    \end{gather*}\vspace{-1.5cm}
+    \begin{gather}
+        \therefore k = 1
     \end{gather}
     
 
+    With $l=1=Z=k=1$ we have:
+    
+    \begin{gather*} 
+             a = l + 1 - \frac{2Z}{k}\\
+             a = 1 + 1 - 2 = 0\\
+             b = 2(l+1)\\
+             b= 2(2) = 4
+    \end{gather*}\vspace{-1.5cm}
+    \begin{gather}
+        a = 0, \; b= 4
+    \end{gather}
+
+    
+    Calculating the $\omega(kr)$
+    \begin{gather*}
+        F(a,b;r) = 1 + \frac{a}{b}\frac{r}{1!} + \frac{a}{b}\frac{(a+1)}{(b+1)}\frac{r^2}{2!} + \dots\\
+        F(0,4;r) = 1 + \frac{0}{4}\frac{r}{1!} + \frac{0}{4}\frac{(0+1)}{(4+1)}\frac{r^2}{2!} + \dots\\
+    \end{gather*}\vspace{-1.5cm}
+    \begin{gather}
+        F(0,4;r) = \omega(r)=1 
+    \end{gather}
+
+
+    
+    
+    Substituting $r$ for $\rho$ to get back $u_{nl}(r)$ from $u_{nl}(\rho)$:\medskip
 
 
 
+    \begin{gather*}
+        u_{nl}(r) = (kr)^{l+1}\exp{-kr/2}\omega(kr)\\
+        u_{21}(r) = r^{1+1}\exp{-r/2}(1)
+    \end{gather*}
+    \begin{gather}
+        u_{21}(r) = r^{2}\exp{-r/2}
+    \end{gather}
 
+    We need to add a constant of normalisation to this function in order for it to belong to the Hilbert space,
+    and we will use (13) in order to normalise.
 
+    \begin{gather*}
+        \int_{0}^{\infty} (Ar^{2}\exp{-r/2})^2dr = \delta_{n'n}\\
+        \int_{0}^{\infty} A^2r^{4}\exp{-r}dr = \delta_{2,2} = 1\\
+    \end{gather*}
 
+    Tabular integration will solve the integral
 
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{cc}
+        \hline
+        \multicolumn{1}{|c|}{F(x)} & \multicolumn{1}{c|}{G(x)} \\ \hline
+                 &  \\ 
+         $r^4$   & $e^{-r}$ \\
+         $-4r^3$  & $-e^{-r}$ \\
+         $12r^2$ & $e^{-r}$ \\
+         $-24r$ & $-e^{-r}$ \\
+         $24$    & $e^{-r}$ \\
+         $0$     & $-e^{-r}$ \\
+                 & $e^{-r}$ \\ \hline
+        \end{tabular}
+    \end{table}
 
+    \begin{gather*}
+        \int_{0}^{\infty} A^2r^{4}\exp{-r}dr  \\
+        = A^2[-r^4\exp{-r} - 4r^3\exp{-r} - 12r^2\exp{-r} - 24r\exp{-r} -24\exp{-r}]^{\infty}_{0}\\
+        = A^2[0 - (-24)]\\
+        = 24A^2 = 1\\
+    \end{gather*}\vspace{-1.5cm}
+    \begin{gather} 
+        A = \frac{1}{2\sqrt{6}} 
+    \end{gather}
+        
+    
+
+    Which normalises the function to
+
+    \begin{gather}
+        u_{21}(r) = \frac{r^2}{2\sqrt{6}}\exp{-r/2}
+    \end{gather}
+
+    as given in the problem statement.
+
+    \medskip
+
+    For $\mathbf{u_{31}(r)}$:
+
+    We start in the same way, by defining the appropriate quantities starting with $Z=1,\; n=3, \; l=1$.
+    Subsequently computing parameters like k:
+
+    \begin{gather*}
+        \rho = kr = \frac{2Zr}{n}\\
+        \rho = kr = \frac{2(1)r}{3} = r\\
+    \end{gather*}\vspace{-1.5cm}
+    \begin{gather}
+        \therefore k = \frac{2}{3}
+    \end{gather}
+
+    $a$ and $b$\dots
+
+    \begin{gather*} 
+        a = l + 1 - \frac{2Z}{k}\\
+        a = 1 + 1 - \frac{2(1)}{\frac{2}{3}}\\
+        a = 1 + 1 - 3 = -1\\
+        b = 2(l+1)\\
+        b= 2(2) = 4
+    \end{gather*}\vspace{-0.5cm}
+    \begin{gather}
+    a = -1, \; b= 4
+    \end{gather}
+
+    Taking these  
 
 
 
