@@ -145,15 +145,16 @@ Equation 2.17 is written as:
     In this case, the function will truncate so long as $a=1-n$ for $n=1,2,3$,
     in this way, after the $n+1$ term of the series and all subsequent terms must simplify to zero.
 
-    In this case then by comparing the equation we have with the general form, we can see that
+    By comparing the equation we have with the general form, we can see that
 
     \begin{align}
         a &= l+1 - \frac{2Z}{k}\\
         b &= 2(l+1)
     \end{align}
 
-    And knowing that the differential equation is has the general solution and that the series terminates, we know that this set of
-    equations satisfies the conditions for a solution of $\omega(\rho)$.
+    And knowing that the differential equation has a general solution in the form of the hypergeometric functions
+    and that the series truncates to be a finite sum, we know that this set of equations 
+    satisfies the conditions for a solution of $\omega(\rho)$ for bound states of the hydrogen atom.
 
 
 
@@ -308,7 +309,108 @@ Equation 2.17 is written as:
     a = -1, \; b= 4
     \end{gather}
 
-    Taking these  
+    Taking these values we compute the $\omega(\rho)$ value needed for the function.
+
+    \begin{gather*}
+        F(a,b;\rho) = 1 + \frac{a}{b}\frac{\rho}{1!} + \frac{a}{b}\frac{(a+1)}{(b+1)}\frac{\rho^2}{2!} + \dots\\
+        F(-1,4;\rho) = 1 + \frac{-1}{4}\frac{\rho}{1!} + \frac{-1}{4}\frac{(-1+1)}{(4+1)}\frac{\rho^2}{2!} + \dots\\
+    \end{gather*}\vspace{-1.5cm}
+    \begin{gather}
+        F(-1,4;\rho) = 1 - \frac{\rho}{4} 
+    \end{gather}
+
+    Replacing $\rho$ with $\frac{2}{3}r$
+
+    \begin{gather}
+        \omega(\frac{2}{3}r) = F(-1,4;\frac{2}{3}r) = 1 - \frac{1}{4}\frac{2}{3}r \\
+        \omega(\frac{2}{3}r) = 1 - \frac{r}{6}
+    \end{gather}
+
+    We now make the appropriate substitutions as follows:
+
+    \begin{gather*}
+        u_{nl}(r) = (kr)^{l+1}\exp{-kr/2}\omega(kr)\\
+        u_{31}(r) = (\frac{2}{3}r)^{1+1}\exp{-\frac{r}{2}\frac{2}{3}}(1-\frac{r}{6})\\
+        u_{31}(r) = (\frac{4}{9})r^2\exp{-\frac{r}{3}}(1-\frac{r}{6})
+    \end{gather*}
+    
+    And add the necessary normalisation coefficient $A$:
+
+    \begin{gather}
+        u_{31}(r) = A(\frac{4}{9})r^2\exp{-\frac{r}{3}}(1-\frac{r}{6})
+    \end{gather}
+
+    As last time we now use the normalisation condition of Equation 13 to determine the normalisation coefficient
+
+    \begin{gather*}
+        \int_{0}^{\infty}dr u_{n'l}(r) u_{nl}(r) = \delta_{n'n}\\
+        \int_{0}^{\infty} (A(\frac{4}{9})r^2\exp{-\frac{r}{3}}(1-\frac{r}{6}))^2dr = \delta_{3'3}\\
+        \int_{0}^{\infty} A^2(\frac{16}{81})\exp{-\frac{2r}{3}}(r^4 - \frac{r^5}{3}+\frac{r^6}{36})dr = \delta_{3,3} = 1
+    \end{gather*}
+    \begin{gather}
+        A^2(\frac{16}{81})\int_{0}^{\infty} \exp{-\frac{2r}{3}}(r^4 - \frac{r^5}{3}+\frac{r^6}{36})dr  = 1
+    \end{gather}
+
+    As before, the form of integral we have is an exponent multiplied by a polynomial, so we know that tabular integration
+    will solve the integral:
+
+    \begin{table}[h]
+        \centering
+        \begin{tabular}{cc}
+        \hline
+        \multicolumn{1}{|c|}{F(x)} & \multicolumn{1}{c|}{G(x)} \\ \hline
+                 &  \\ 
+         $r^4 - \frac{r^5}{3}+\frac{r^6}{36}$   & $\exp{-\frac{2r}{3}}$ \\
+         &  \\
+         $-(4r^3 - \frac{5}{3}r^4 + \frac{6}{36}r^5)$  & $-\frac{3}{2}\exp{-\frac{2r}{3}}$ \\
+         &  \\
+         $12r^2 - \frac{20}{3}r^3 + \frac{5}{6}r^4$ & $\frac{9}{4}\exp{-\frac{2r}{3}}$ \\
+         &  \\
+         $-(24r - 20r^2 + \frac{20}{6}r^3)$ & $-\frac{27}{8}\exp{-\frac{2r}{3}}$ \\
+         &  \\
+         $24 - 40r + 10r^2$    & $\frac{81}{16}\exp{-\frac{2r}{3}}$ \\
+         &  \\
+         $-(-40 + 20r)$     & $-\frac{243}{32}\exp{-\frac{2r}{3}}$ \\
+         &  \\
+         $20$       & $\frac{729}{64}\exp{-\frac{2r}{3}}$ \\\
+         &  \\ 
+         $0$     & $-\frac{2187}{128}\exp{-\frac{2r}{3}}$    \\       \hline
+        \end{tabular}
+    \end{table}
+
+    Resulting in the final integral
+
+    \begin{gather*}
+        A^2(\frac{16}{81})\int_{0}^{\infty} \exp{-\frac{2r}{3}}(r^4 - \frac{r^5}{3}+\frac{r^6}{36})dr  \\
+        = A^2(\frac{16}{81})
+        [   
+        -\frac{3}{2}\exp{-\frac{2r}{3}}(r^4 - \frac{r^5}{3}+\frac{r^6}{36})
+        -\frac{9}{4}\exp{-\frac{2r}{3}}(4r^3 - \frac{5}{3}r^4 + \frac{6}{36}r^5)\\
+        -\frac{27}{8}\exp{-\frac{2r}{3}}(12r^2 - \frac{20}{3}r^3 + \frac{5}{6}r^4)
+        -\frac{81}{16}\exp{-\frac{2r}{3}}(24r - 20r^2 + \frac{20}{6}r^3)\\
+        -\frac{243}{32}\exp{-\frac{2r}{3}}(24 - 40r + 10r^2)
+        -\frac{729}{64}\exp{-\frac{2r}{3}}(-40 + 20r)
+        -20\frac{2187}{128}\exp{-\frac{2r}{3}}]^{\infty}_{0}=1\\
+    \end{gather*}
+
+    Which in the limits of the integration will evaluate to:
+
+    \begin{gather*}
+        = A^2(\frac{16}{81})(\frac{2187}{32})=1\\
+        = \frac{27}{2}A^2 = 1
+    \end{gather*}
+    \begin{gather}
+        A = \frac{2}{3\sqrt{6}}
+    \end{gather}
+        
+    
+
+    When finally substituted into the function for $u$:
+
+    \begin{gather}
+        u_{31}(r) = \frac{2}{3\sqrt{6}}(\frac{4}{9})r^2\exp{-\frac{r}{3}}(1-\frac{r}{6})\\
+        u_{31}(r) = \frac{8r^2}{27\sqrt{6}}\exp{-\frac{r}{3}}(1-\frac{r}{6})
+    \end{gather}
 
 
 
