@@ -188,12 +188,12 @@
 
     Substituting the evaluated amplitudes into 5.15 we get
 
-    \begin{gather}
+    \begin{gather*}
         0 = |\frac{1}{\sqrt{2}}|^2|\frac{1}{\sqrt{2}}|^2 + |-\frac{1}{\sqrt{2}}|^2|\frac{1}{\sqrt{2}}|^2\\
           + (\frac{1}{\sqrt{2}})(\frac{1}{\sqrt{2}})(-\frac{1}{\sqrt{2}})^*(\frac{1}{\sqrt{2}})^*\\
           + (\frac{1}{\sqrt{2}})^*(\frac{1}{\sqrt{2}})^*(-\frac{1}{\sqrt{2}})(\frac{1}{\sqrt{2}})\\
           = \frac{1}{4} + \frac{1}{4} - \frac{1}{4} - \frac{1}{4} = 0
-    \end{gather}
+    \end{gather*}
 
     RHS = 0 and LHS = RHS.
 
@@ -202,8 +202,53 @@
 
 \section{Question 6}
 
+Show that $(\hat{A}^{\dagger})^{\dagger} = \hat{A}$.
+
+For arbitrary $\ket{\chi}$
+
+\begin{gather}
+    \braket{\psi|\hat{A}^\dagger|\chi} = \braket{\chi|\hat{A}|\psi}^*
+\end{gather}
+
+It follows that
+
+\begin{gather}
+    \braket{\psi|\hat{A}^\dagger|\chi}^* = \braket{\chi|\hat{A}|\psi}
+\end{gather}
+
+These two facts imply that
+
+\begin{gather}
+    \braket{\psi|\hat{A}^\dagger|\chi}^* = \braket{\chi|(\hat{A}^\dagger)^\dagger|\psi}\\
+    \braket{\psi|\hat{A}^\dagger|\chi}^* = \braket{\chi|\hat{A}|\psi} = \braket{\chi|(\hat{A}^\dagger)^\dagger|\psi}\\
+    \therefore (\hat{A}^{\dagger})^{\dagger} = \hat{A}
+\end{gather}
+
+\vspace{2cm}
+
+From this we can state:
+
+
+\begin{gather}
+    \bra{\phi}\hat{A} = \bra{\phi}(\hat{A}^{\dagger})^{\dagger}\\
+    \bra{\phi}(\hat{A}^{\dagger})^{\dagger} = \bra{\hat{A}^{\dagger}\phi}
+\end{gather}
+\begin{center}
+    Thus, $\bra{\phi}\hat{A} = \bra{\hat{A}^{\dagger}\phi}$
+\end{center}
+
+
+
 
 \section{Question 7}
+
+    Show that $(\hat{A}\hat{B})^\dagger = \hat{B}^\dagger \hat{A}^\dagger$
+
+    \begin{gather}
+        \braket{\phi | \hat{A}\hat{B}\psi}\\
+        = \braket{\hat{A}^\dagger \phi | \hat{B}\psi}\\
+        = \braket{\hat{B}^\dagger\hat{A}^\dagger \phi | \hat{B}\psi}
+    \end{gather}
 
 
 \section{Question 8}
