@@ -101,6 +101,27 @@
 
 \section{Question 2}
 
+    As in question one, for a general state $\ket{\psi}$, the expectation value $\hat{S_z}$
+
+    \begin{gather}
+        \braket{\hat{S_z}} = \braket{\psi|\hat{S_z}|\psi}\\
+        \braket{\hat{S_z}} = \frac{1}{2}(|\braket{\psi|z_+}|^2 - |\braket{\psi|z_-}|^2)
+    \end{gather}
+
+    There are two key terms $\braket{\psi|z_+}$ and $\braket{\psi|z_-}$ which we compute:
+
+    \begin{gather}
+        \braket{\psi|z_+} = -\frac{i}{\sqrt{3}}\braket{z_+|z_+} + 0 = -\frac{i}{\sqrt{3}}\\
+        \braket{\psi|z_-} = 0 + \sqrt{\frac{2}{3}}\braket{z_-|z_-} = \sqrt{\frac{2}{3}}
+    \end{gather}
+
+    Which we apply to $\braket{\hat{S_z}}$
+
+    \begin{gather}
+        \braket{\hat{S_z}} = \frac{1}{2}(|-\frac{i}{\sqrt{3}}|^2 - |\sqrt{\frac{2}{3}}|^2)\\
+        \braket{\hat{S_z}} = \frac{1}{2}\left( \frac{1}{3} - \frac{2}{3} \right)\\
+        \braket{\hat{S_z}} = \frac{1}{6}
+    \end{gather}
 
 
 
@@ -231,7 +252,7 @@ From this we can state:
 
 \begin{gather}
     \bra{\phi}\hat{A} = \bra{\phi}(\hat{A}^{\dagger})^{\dagger}\\
-    \bra{\phi}(\hat{A}^{\dagger})^{\dagger} = \bra{\hat{A}^{\dagger}\phi}
+    \bra{\phi}(\hat{A}^{\dagger})^{\dagger} = \bra{\hat{A}^{\dagger}\phi}/
 \end{gather}
 \begin{center}
     Thus, $\bra{\phi}\hat{A} = \bra{\hat{A}^{\dagger}\phi}$
@@ -253,7 +274,33 @@ From this we can state:
 
 \section{Question 8}
 
+If $\hat{A}$ is Hermitian, then by definition $\hat{A}^\dagger = \hat{A}$.
 
+The eigenvalue equation:
 
+\begin{gather}
+    \hat{A}\ket{\psi} = a\ket{\psi}
+\end{gather}
+
+Lets pre-multiply by a generic $\bra{\psi}$.
+
+\begin{gather}
+    \braket{\psi|\hat{A}|\psi} = a \braket{\psi|\psi}
+\end{gather}
+
+If we do the same with the adjoint operator;
+
+\begin{gather}
+    \braket{\psi|\hat{A}^\dagger|\psi} = a^* \braket{\psi|\psi}
+\end{gather}
+
+If we know that $\hat{A}^\dagger = \hat{A}$, then that implies that:
+
+\begin{gather}
+    a \braket{\psi|\psi} = a^* \braket{\psi|\psi}\\
+    a = a^*
+\end{gather}
+
+The only condition for which $a = a^*$ is if $a \in \mathbb{R}$. Thus the eigenvalues of Hermitian operators are real.
 
 \end{document}
