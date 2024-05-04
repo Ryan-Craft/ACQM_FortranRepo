@@ -1,0 +1,255 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts,amssymb,amsmath,mathbbol,amsthm,amstext,esint,mathtools,nccmath,upgreek}
+\graphicspath{ {./Images/} }
+\setlength{\jot}{0.5cm}
+\DeclareSymbolFontAlphabet{\mathbb}{AMSb}
+\DeclareSymbolFontAlphabet{\mathbbl}{bbold}
+\usepackage{graphics,graphicx,epsfig,ulem, xcolor, soul}
+\usepackage[margin={2cm,2cm}]{geometry}
+\usepackage{tikz,pgfplots}
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{physics, amsmath}
+\usepackage{braket}
+\usepackage{float}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage[american,siunitx]{circuitikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.3}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\let\oldhat\hat
+\renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+\AtBeginDocument{
+\heavyrulewidth=.08em
+\lightrulewidth=.05em
+\cmidrulewidth=.03em
+\belowrulesep=.65ex
+\belowbottomsep=0pt
+\aboverulesep=.4ex
+\abovetopsep=0pt
+\cmidrulesep=\doublerulesep
+\cmidrulekern=.5em
+\defaultaddspace=.5em
+}
+
+
+\begin{document}
+\newpage
+\begin{center}
+       
+       \vspace*{1cm}
+        \LARGE
+       \textbf{Exercise 4}
+
+       \vspace{0.5cm}
+        PHYS4000
+        Advanced Computational Quantum Mechanics
+            
+       \vspace{1.5cm}
+
+       \text{Ryan Craft}\bigskip
+
+       Unit Coordinated by\\
+       Dr. Igor Bray
+            
+       \vspace{0.8cm}
+     
+            
+       
+        \today
+            
+\end{center}
+\newpage
+
+		\section{Q1:}
+		We are given:
+		
+		\begin{gather}
+			Im(T_{fi}^{SN}) = -\pi \sum_{n=1}^{N_o} k_n T_{fn}^*T_{ni}\\
+			\sigma_{fi}^{SN} = \frac{k_f}{k_i}|T_{fi}^{SN}|^2\\
+			\sigma_i^{SN} = \sum_{f=1}^{N_o} \sigma_{fi}^{SN}
+		\end{gather}
+		
+		
+		We write:
+		
+		\begin{gather}
+			|T_{fi}|^2 = Re(T_{fi})^2 + Im(T_{fi})^2
+		\end{gather}
+		
+		The imaginary part can be develop under the assumption $i=f$ and that T is symmetric to produce:
+		
+		\begin{gather}
+			Im(T_{fi}^{SN}) = -\pi \sum_{n=1}^{N_o} k_n T_{in}^*T_{ni}\\
+			Im(T_{fi}^{SN}) = -\pi \sum_{n=1}^{N_o} k_n |T_{ni}|^2
+		\end{gather}
+		
+		At this point if we let $n=f$ for equation 6, as they are essentially interchangeable:
+		
+		\begin{gather}
+			Im(T_{fi}^{SN}) = -\pi \sum_{f=1}^{N_o} k_f |T_{fi}|^2
+		\end{gather}
+		
+		we can see a relation between $\sigma_{fi}^{SN}$ and $Im(T_{fi}^{SN})$;
+		
+		\begin{gather}
+			-\frac{1}{\pi k_i}	Im(T_{fi}^{SN}) = \sigma_{fi}^{SN} = \frac{k_f}{k_i}|T_{fi}^{SN}|^2
+		\end{gather}
+		
+		Which then reveals that:
+		
+		\begin{gather}
+			\sigma_i^{SN} = \sum_{f=1}^{N_o} \sigma_{fi}^{SN} =  \sum_{f=1}^{N_o} \frac{k_f}{k_i}|T_{fi}^{SN}|^2 = -\frac{1}{\pi k_i}	Im(T_{fi}^{SN})
+		\end{gather}
+	
+	
+	
+	\section{Q2}
+		
+		\subsection{Q2, a)}
+			We start with
+			
+			\begin{gather}
+				(\frac{k^2}{2} - K - U)\ket{k^+} = 0
+			\end{gather}
+			Re-arrange and apply greens theorem
+			\begin{gather}
+				(\frac{k^2}{2}-K)\ket{k^+} = U\ket{k^+}\\
+				\ket{k^+} = \ket{k} + \frac{U}{k^2/2-K}\ket{k^+}\\
+				\ket{k^+} = \ket{k} + \int_{0}^{\infty}dk'k'^2\frac{\ket{k'}\bra{k'}U\ket{k^+}}{k^2/2-k'^2/2}
+			\end{gather}
+			
+			We now substitute with the definition $\bra{k'}U\ket{k^+}$ = $\bra{k'}t\ket{k}$:
+			
+			\begin{gather}
+				\ket{k^+} = \ket{k} + \int_{0}^{\infty}dk'k'^2\frac{\ket{k'}\bra{k'}t\ket{k}}{k^2/2-k'^2/2}
+			\end{gather}
+		
+		
+		\subsection{Q2,b)}
+		
+			premultiply my $\bra{k}U$
+			
+			\begin{gather}
+			\bra{k}U\ket{k^+} = \bra{k}U\ket{k} + \int_{0}^{\infty}dk'k'^2\frac{\bra{k}U\ket{k'}\bra{k'}t\ket{k}}{k^2/2-k'^2/2}\\
+			\bra{k}t\ket{k} = \bra{k}U\ket{k} + \int_{0}^{\infty}dk'k'^2\frac{\bra{k}U\ket{k'}\bra{k'}t\ket{k}}{k^2/2-k'^2/2}\\
+			\end{gather}
+			
+			This gives the Lippmann Schwinger equation.
+			
+		\subsection{Q2,c)}
+		
+			The value of $\bra{k}U\ket{k}$ can be given in coordinate space by the following:
+			
+			\begin{gather}
+				\braket{k|U|k} = \int_{0}^{\infty}drr^2\braket{k|r}\braket{r|U|k}
+			\end{gather}
+			
+			When $\braket{r|k}$ is defined as $\sin(kr)$, and is fully real, the conjugate returns the same function, thus:
+			
+			\begin{gather}
+				\braket{k|U|k} = \int_{0}^{\infty}drr^2\braket{r|k}\braket{r|U|k}\\
+				\braket{k|U|k} = \int_{0}^{\infty}drr^2 U(r) \braket{r|k}^2\\
+				\braket{k|U|k} = \int_{0}^{\infty} dr U(r)  [r\sin(kr)]^2
+			\end{gather}
+			
+			The part of the integrand, $[r\sin(kr)]^2$  results in an infinite size integral over infinity, thus we know that $U(r)$ must be short ranged to allow the integrand to asymptotically go to zero, forcing this integral to be finite. 
+		
+		\subsection{Q2,d)}
+		
+			In the ordinary complex solution of equation 17, we would end up with:
+			
+			\begin{gather}
+				\braket{k|t|k} = \braket{k|U|k} + P.V. \int_{0}^{\infty}(dk'2k'^2\frac{\bra{k}U\ket{k'}\bra{k'}t\ket{k}}{k^2-k'^2}) - i \pi  \braket{k|U|k}\braket{k|t|k}\\
+			\end{gather}
+			
+			Which has a complex component. If we choose $\braket{k|P|k}$ to be defined as $(1 + i\pi\braket{k|P|k})\braket{k|t|k}$, and multiply equation 22 by the factor in brackets:
+			
+			\begin{gather}
+				\braket{k|t|k}(1 + i\pi\braket{k|P|k}) = \braket{k|U|k}(1 + i\pi\braket{k|P|k}) + \\
+				P.V. \int_{0}^{\infty}(dk'2k'^2\frac{\bra{k}U\ket{k'}\bra{k'}t\ket{k}}{k^2-k'^2})(1 + i\pi\braket{k|P|k}) \\
+				- i \pi \braket{k|U|k}\braket{k|t|k}(1 + i\pi\braket{k|P|k})\\
+			\end{gather}
+			
+			Which, once expanded and simplified, results in the equation:
+			
+			\begin{gather}
+				\braket{k|P|k} = \braket{k|U|k} + P.V. \int_{0}^{\infty}(dk'2k'^2\frac{\bra{k}U\ket{k'}\braket{k'|P|k}}{k^2-k'^2})
+			\end{gather}
+			
+			Which has eliminated the complex components of the integral.
+			
+		\subsection{Q2, e)}
+			Evaluation of $\braket{r|k^+}$
+			
+			\begin{gather}
+				\braket{r|k^+} = \braket{r|k} + \int_{0}^{\infty}dk'k'^2\frac{\braket{r|k'}\bra{k'}t\ket{k}}{k^2/2-k'^2/2}\\
+			\end{gather}
+			
+			We perform the complex integration similar to 7.34 of the lecture notes
+			
+			\begin{gather}
+				\int_{0}^{\infty}dk'k'^2\frac{\braket{r|k'}\bra{k'}t\ket{k}}{k^2/2-k'^2/2} =\\
+				P.V. \int_{0}^{\infty}\frac{2k'^2\braket{r|k'}\braket{k'|t|k}}{k^2-k'^2}dk'	- i\pi k \braket{r|k}\braket{k|t|k}
+			\end{gather}
+			
+			Substituting this into equation 29
+			
+			\begin{gather}
+				\braket{r|k^+} = \braket{r|k} + P.V. \int_{0}^{\infty}\frac{2k'^2\braket{r|k'}\braket{k'|t|k}}{k^2-k'^2}dk'	- i\pi k \braket{r|k}\braket{k|t|k}
+			\end{gather}
+			
+			We want to determine that $\braket{r|k^+} = \psi(r,k)e^{i\delta_k}$
+			We will define $\braket{k|K|k} = (1+i\pi k \braket{k|K|k})\braket{k|t|k}$ And acknowledge that it essentially represents a single complex number.
+			We post-multiply our equation 33 by this factor in brackets.
+			
+			\begin{gather}
+				\braket{r|k^+}(1+i\pi k \braket{k|K|k}) = \braket{r|k}(1+i\pi k \braket{k|K|k}) +\\
+				 P.V. \int_{0}^{\infty}\frac{2k'\braket{r|k'}\braket{k'|t|k}}{k^2-k'^2}(1+i\pi k \braket{k|K|k})\\	
+				- i\pi k \braket{r|k}\braket{k|t|k}(1+i\pi k \braket{k|K|k})
+			\end{gather}
+			
+			Which can be simplified to:
+			
+			\begin{gather}
+				\braket{r|k^+}(1+i\pi k \braket{k|K|k}) = \braket{r|k} +  P.V. \int_{0}^{\infty}\frac{2k'\braket{r|k'}\braket{k'|K|k}}{k^2-k'^2}
+			\end{gather}
+			
+			The Principal Value integral is fully real and $\braket{r|k} = \sin(kr)$, which is a real valued function. If $(1+i\pi k \braket{k|K|k})$ is simply evaluated into a complex value, then if we divide through by this quantity and allow the inverse of $(1+i\pi k \braket{k|K|k})$ equal to an arbitrary complex value $z$.
+			We can represent $\braket{r|k^+}$ in the following form:
+			
+			\begin{gather}
+				\braket{r|k^+} = \left(\braket{r|k} + P.V. \int_{0}^{\infty}\frac{2k'\braket{r|k'}\braket{k'|K|k}}{k^2-k'^2}\right) z\\
+				\braket{r|k^+} = \psi(r,k)Re^{i\delta_k}\\
+				\braket{r|k^+} = \psi(r,k)e^{i\delta_k}
+			\end{gather}
+			
+			Where $z$ is represented in an exponential form w.r.t $\delta_k$, and the component in brackets is a real function of $k$, $r$ $\to$ $\psi(r,k)$. We absorb the $R$ component of our exponential into the function $\psi(r,k)$ to match the representation given in the question statement.
+			In particular, as $Re^{i\delta_k}$ represents \textit{some} complex value, we give $\delta_k \in [0,2\pi)$ as the minimum domain to represent all the possible complex values. 
+		
+			
+			
+			
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

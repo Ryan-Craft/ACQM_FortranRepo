@@ -1,0 +1,281 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts,amssymb,amsmath,mathbbol,amsthm,amstext,esint,mathtools,nccmath,upgreek}
+\graphicspath{ {./Images/} }
+\setlength{\jot}{0.5cm}
+\DeclareSymbolFontAlphabet{\mathbb}{AMSb}
+\DeclareSymbolFontAlphabet{\mathbbl}{bbold}
+\usepackage{graphics,graphicx,epsfig,ulem, xcolor, soul}
+\usepackage[margin={2cm,2cm}]{geometry}
+\usepackage{tikz,pgfplots}
+\usepackage{siunitx}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{physics, amsmath}
+\usepackage{braket}
+\usepackage{float}
+\usepackage{cleveref}
+\usepackage{booktabs}
+\usepackage[american,siunitx]{circuitikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{pgfplotstable}
+\pgfplotsset{compat=1.3}
+\renewcommand{\vec}[1]{\mathbf{#1}}
+\let\oldhat\hat
+\renewcommand{\hat}[1]{\oldhat{\mathbf{#1}}}
+\AtBeginDocument{
+\heavyrulewidth=.08em
+\lightrulewidth=.05em
+\cmidrulewidth=.03em
+\belowrulesep=.65ex
+\belowbottomsep=0pt
+\aboverulesep=.4ex
+\abovetopsep=0pt
+\cmidrulesep=\doublerulesep
+\cmidrulekern=.5em
+\defaultaddspace=.5em
+}
+
+
+\begin{document}
+\newpage
+\begin{center}
+       
+       \vspace*{1cm}
+        \LARGE
+       \textbf{Exercise 3}
+
+       \vspace{0.5cm}
+        PHYS4000
+        Advanced Computational Quantum Mechanics
+            
+       \vspace{1.5cm}
+
+       \text{Ryan Craft}\bigskip
+
+       Unit Coordinated by\\
+       Dr. Igor Bray
+            
+       \vspace{0.8cm}
+     
+            
+       
+        \today
+            
+\end{center}
+\newpage
+
+	\section{Contour Integration Questions}
+	Using complex integration techniques, evaluate the following:
+		\subsection{Q1: 6.31}
+			\begin{gather}
+				\int_{0}^{\infty} \frac{1}{1+x^2}dx
+			\end{gather}
+			
+			We want to apply the residue theorem to determine this integral.
+			Consider the complex function of similar form:
+			
+			\begin{gather}
+				f(z) = \frac{1}{1+z^2}
+			\end{gather}
+			Which has singularities at $\pm i$. 
+			
+			We introduce the contour $\Gamma = [-R,R] + C^{+}_{R}(0)$, which is a segment of the real number line combined with the counter-clockwise positive semicircle encompassing the point $+i$ (for suitable $R$). 
+			
+			We solve for a similar integral:
+			\begin{gather}
+				\int_{-\infty}^{\infty}\frac{1}{1+x^2}dx = \lim_{R\to\infty} \left( \oint_{\Gamma}\frac{1}{1+z^2}dz - \int_{ C^{+}_{R}(0)}\frac{1}{1+z^2}dz\right)
+			\end{gather}
+			
+			We can use the Residue Theorem to evaluate the first integral on the RHS.
+			
+			\begin{gather}
+				\lim_{R\to\infty}\oint_\Gamma \frac{1}{1+z^2}dz = 2\pi i [Res(f,i)Ind_\Gamma(i)+Res(f,-i)Ind_\Gamma(-i)]\\
+				\lim_{R\to\infty}\oint_\Gamma \frac{1}{1+z^2}dz = 2\pi i \lim_{z\to i}\left( (z-i)\frac{1}{1+z^2} \right)\\
+				\lim_{R\to\infty}\oint_\Gamma \frac{1}{1+z^2}dz = 2\pi i [\frac{1}{2i}] = \pi
+			\end{gather}
+					
+			We show that the integral over the semicircle tends to zero in the limit. We create a parameterisation in $t$:
+			\begin{gather}
+				z=Re^{it}, t \in [0,\pi]
+			\end{gather}
+			
+			\begin{gather}
+				\lim_{R\to\infty}\left| \int_{ C^{+}_{R}(0)}\frac{1}{1+z^2}dz \right| = \lim_{R\to\infty}\left| \int^{\pi}_{0}\frac{1}{1+(Re^{it})^2}Rie^{it}dt \right|\\
+				\leq \lim_{R\to\infty} \int_{0}^{\pi} \left|    \frac{1}{1+(Re^{it})^2}Rie^{it}dt  \right|\\
+				= \lim_{R\to\infty} \int_{0}^{\pi} \frac{R}{|R^2e^{2it}+1|}dt  \\
+			\end{gather}
+			
+			At this point we can tell that the integrand goes to zero in the limit, due to the exponent in the denominator, thus the semicircle part of the contour becomes zero. Returning to the original equation:
+			
+			\begin{gather}
+				\int_{-\infty}^{\infty}\frac{1}{1+x^2}dx = \lim_{R\to\infty} \left( \oint_{\Gamma}\frac{1}{1+z^2}dz - \int_{ C^{+}_{R}(0)}\frac{1}{1+z^2}dz\right)\\
+				\int_{-\infty}^{\infty}\frac{1}{1+x^2}dx = \left( \pi - 0\right)\\
+				\int_{-\infty}^{\infty}\frac{1}{1+x^2}dx = \pi
+			\end{gather}
+			
+			However the original equation has integrates between $[0,\infty]$. 
+			Because this function is even, we know that the integral from $[-\infty,\infty]$ is twice the integral from $[0,\infty]$.
+			Thus the answer:
+			
+			\begin{gather}
+				\int_{-\infty}^{\infty}\frac{1}{1+x^2}dx = 2\int_{0}^{\infty}\frac{1}{1+x^2}dx =\pi\\
+				\int_{0}^{\infty}\frac{1}{1+x^2}dx =\pi/2
+			\end{gather}
+			
+			
+	
+		\subsection{Q2: 6.32}
+			
+			\begin{gather}
+				\int_{-\infty}^{-\infty}\frac{\cos(x)}{x^2+2x+5}dx
+			\end{gather}
+			
+			We consider a complex contour integral the same as the previous question: $\Gamma = [-R,R] + C^{+}_{R}(0)$. 
+			The complex analogue of the real function:
+			
+			\begin{gather}
+				f(z) = \frac{e^{iz}}{z^2+2z+5}
+			\end{gather}
+			
+			Has roots at $-1\pm 2i$, allowing the function to be represented in a factored form;
+			\begin{gather}
+				f(z) = \frac{e^{iz}}{(z+1-2i)(z+1+2i)}
+			\end{gather}
+			
+			The contour integral:
+			\begin{gather}
+				\oint_{\Gamma}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz = 2\pi i [Res(f,-1+2i)Ind_\Gamma(-1+2i)+Res(f,-1-2i)Ind_\Gamma(-1-2i)]\\
+				= 2\pi i [Res(f,-1+2i)]\\
+				= 2\pi i [\lim_{z\to -1+2i}(z-(-1+2i))\frac{e^{iz}}{(z+1-2i)(z+1+2i)}]\\
+				= 2\pi i [\lim_{z\to -1+2i}\frac{e^{iz}}{(z+1+2i)}] = \frac{\pi(\cos(1)-i\sin(1))}{2e^2}
+			\end{gather}
+			
+			\begin{gather}
+				\oint_{\Gamma}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz = \int_{-R}^{R}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz + \int_{C^{+}_{R}(0)}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz
+			\end{gather}
+			So long as we allow $R>\sqrt{5}$.
+			
+			In a similar way to Q1 we can show that the semicircular part of this integral goes to zero in the limit $R \to \infty$. In this way we can show:
+			
+			\begin{gather}
+			\lim_{R\to\infty}	\oint_{\Gamma}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz = \lim_{R\to\infty}\int_{-R}^{R}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz + \lim_{R\to\infty}\int_{C^{+}_{R}(0)}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz\\
+			= \lim_{R\to\infty}\int_{-R}^{R}\frac{e^{iz}}{(z+1-2i)(z+1+2i)}dz + 0 = \frac{\pi(\cos(1)-i\sin(1))}{2e^2}
+			\end{gather}
+			
+			To recover the original integral we apply the limit and take the real part of both sides:
+			
+			\begin{gather}
+				Re\left( \int_{-\infty}^{\infty}\frac{e^{iz}}{z^2+2z+5}dz\right) = Re\left(\frac{\pi(\cos(1)-i\sin(1))}{2e^2}\right)\\
+				\int_{-\infty}^{\infty}\frac{cos(x)}{x^2+2x+5}dx = \frac{\pi \cos(1)}{2e^2}
+			\end{gather}
+			
+			 
+			
+			
+		
+	
+	\section{Scattering Questions}
+		\subsection{Q1}
+		Show that for $j=j'=1$ that 7.19 hold for any $\lambda>0$.
+		
+		In the $l=0$ Laguerre basis:
+		\begin{gather}
+			\xi^{\lambda}_{j}(r) = \sqrt{\frac{\lambda(j-1)!}{(j+1)!}}(\lambda r)L^{2}_{j-1}(\lambda r)e^{-\lambda r / 2}
+		\end{gather}
+		
+		Where we need to determine $L^{2}_{j-1}$ for $j=1$:
+		
+		\begin{gather}
+			L^{k}_{j}(\lambda r) = \sum_{m=0}^{j} \frac{(-1)^m (j+k)!(\lambda r)^m}{(j-m)!(k+m)!m!}\; |_{k=2,j=j-1}\\
+			L^{2}_{0}(\lambda r) = \frac{(-1)^0 (0+2)!(\lambda r)^0}{(0-0)!(2+0)!0!}\\
+			L^{2}_{0}(\lambda r) = \frac{2!}{2!} = 1
+		\end{gather}
+		
+		\begin{gather}
+			\xi^{\lambda}_{1}(r) = \sqrt{\frac{\lambda}{2}}(\lambda r)e^{-\lambda r / 2}
+		\end{gather}
+		
+		Now we evaluate the following:
+		
+		\begin{gather}
+			\braket{\xi^{\lambda}_{1}(r)|\xi^{\lambda}_{1}(r)} = \frac{\lambda}{2}\int_{0}^{\infty} (\lambda r)^2 e^{\lambda r} dr\\
+			= \frac{\lambda^3}{2}[-\lambda^{-1}r^2e^{-\lambda r} -\lambda^{-2}2re^{-\lambda r} -\lambda^{-3}2e^{-\lambda r}]|^{\infty}_{0}\\
+			= \frac{\lambda^3}{2} [\frac{2}{\lambda^3}] = 1 = \delta_{11}
+		\end{gather}
+		
+		If $\lambda = 0$, then the integrand is zero, and $0 \neq 1$. For $\lambda < 0$ the exponent in the integrand is positive and the function diverges,
+		thus it cannot integrate to a finite value over the interval $0 \to \infty$. So 7.19 holds for $j=j'=1$ for $\lambda > 0$
+		
+		\subsection{Q2}
+		
+		With $\lambda = 2$ for equation 7.20, show the eigenenergy is $\epsilon = -1/2$ for $j=j'=1$.
+		
+		7.20 is:
+		
+		\begin{gather}
+			A\ket{C_n} = \epsilon_n\ket{C_n}
+		\end{gather}
+		
+		The matrix notation for 7.20 is:
+		\begin{gather}
+			\sum_{j'=1}^{N} A_{jj'}C_{j'n} = \epsilon_n C_{jn}
+		\end{gather}
+		
+		In the case of $j=j'=1$ the matrix $A_{jj'}$ becomes $A_{11}$, which makes the matrix notation:
+		\begin{gather}
+			\sum_{j'=1}^{1} A_{11}C_{11} = \epsilon_1 C_{11}\\
+			\to A_{11}C_{11} = \epsilon_1 C_{11}
+		\end{gather}
+		
+		
+		
+		
+		We need to determine the operator $A$, defined as:
+		
+		\begin{gather}
+			A_{jj'} = \braket{\xi^{\lambda}_{j}(r)| H_2 |\xi^{\lambda}_{j'}(r)}
+		\end{gather}
+		
+		In the case of $j=j'=1$ we have only one matrix element:
+		
+		\begin{gather}
+			A_{11} = \braket{\xi^{\lambda}_{1}(r)| H_2 |\xi^{\lambda}_{1}(r)}
+		\end{gather}
+		
+		Where $H_2 = (-\frac{d^2}{2dr^2}-\frac{1}{r})$, we can compute $A_{11}$:
+		
+		\begin{gather}
+			A_{11} = \int_{0}^{\infty}(2re^{-r})(-\frac{d^2}{2dr^2}-\frac{1}{r})(2re^{-r})dr\\
+			A_{11} = \int_{0}^{\infty}(2re^{-r})(-re^{-r})dr\\
+			A_{11} = \int_{0}^{\infty}(-2r^2e^{-2r})dr\\
+			A_{11} = [2e^{-r}-re^{-r}-2e^{-r}]|^{\infty}_{0}=-\frac{1}{2}
+		\end{gather}
+		
+		Substituting this value of $A$ into the matrix equation from before:
+		
+		\begin{gather}
+			A_{11}C_{11} = \epsilon_1 C_{11}\\
+			-\frac{1}{2}C_{11} = \epsilon_1 C_{11}\\
+			\therefore \epsilon_1 = -\frac{1}{2}
+		\end{gather}
+		
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
