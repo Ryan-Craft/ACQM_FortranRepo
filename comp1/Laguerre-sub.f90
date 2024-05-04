@@ -21,23 +21,37 @@ program LaguerreSub
        
         Print *, alpha, N, l, dr, rmax
 
-        allocate(rgrid(nr))
-        allocate(basis(N,N))
 
         !calculate rgrid params
-        nr = rmax/dr
+        nr = rmax/dr + 1
+        Print *, nr
+
+        !allocate rgrid and basis
+        allocate(rgrid(nr))
+        allocate(basis(nr,N))
+
         
-        !populate the rgrid
         do i = 1, nr
                 rgrid(i) = (i-1)*dr
-                Print *, rgrid(i)
-        end do 
+        end do     
 
-        basis(:,1) = (2.0d0*alpha*rgrid(:)) ** (l+1)*exp(-alpha*rgrid(:))
-        
-        do j = 1, N
-                Print *, basis(j,1)
+ 
+        basis(:,1) = (2.0d0*alpha*rgrid(:))**(l+1) *exp(-alpha*rgrid(:))
+        basis(:,2) = 2.0d0*(l+1-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l+1) *exp(-alpha*rgrid(:))      
+
+        !generate N laguerre basis using recurrence relation
+        do i = 3, N
+                basis(:,i) = (2*(i-1+l-alpha*rgrid(:))*basis(:,i-1) - (i+2*l-1)*basis(:,i-2) )  / (i-1)
+
         end do
+ 
+        Print *, "BASIS 1: \n" 
+        do j = 1, nr
+                Print *, rgrid(j), basis(j,1), basis(j,2), basis(j,3), basis(j,4)
+        end do
+
+
+        !generate N laguerre basis using recurrence relation
 
 
 
