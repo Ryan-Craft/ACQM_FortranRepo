@@ -37,8 +37,10 @@ program main
          end subroutine
          END INTERFACE
 
+         
 
 
+         real :: normalise, p
          real :: alpha, l
          real :: dr, rmax
          integer :: N, nr
@@ -67,7 +69,20 @@ program main
 
          !use recurrence relation to compute the basis functions
          CALL LaguerreSub(alpha, l, N, rgrid, basis)
-         
+
+         !implement normalisation condition using simplified factorial
+         do i = 1, N
+                 p=1.0
+                 do j = 0, 2*l
+                         p = real(p*(i+2*l-j))
+                         Print *, p, j
+                 end do
+                 normalise = sqrt(alpha /((i+l)* p))
+                 basis(:,i) = normalise*basis(:,i)  
+         end do
+
+ 
+ 
          Print *, "RGRID: basis 1 : basis 2 : basis 3 : basis 4 \n"
         do j = 1, nr
                 Print *, rgrid(j), basis(j,1), basis(j,2), basis(j,3), basis(j,4)

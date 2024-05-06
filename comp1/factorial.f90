@@ -5,7 +5,7 @@ program factorial
         real :: a, l, k, p
         real :: f1, f2, s
        
-        k=2.0
+        k=35.0
         a=1.0
         l=1.0
         
