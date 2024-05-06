@@ -1,16 +1,15 @@
 
-subroutine LaguerreSub(alpha, l, N, rgrid, basis)
+subroutine LaguerreSub(alpha, l, nr, N, rgrid, basis)
         implicit none
 
         ! initialise alpha, l, dr, rmax, N and others
-        integer :: i,j,nr
+        integer :: i,j
+        integer, intent(in) :: nr
         integer, INTENT(IN) :: N
         real, INTENT(IN) :: alpha, l
-        real, dimension(:), INTENT(IN) :: rgrid
-        real, dimension(:,:) :: basis
+        real, dimension(nr), INTENT(IN) :: rgrid
+        real, dimension(nr,N) :: basis
         
-        nr = size(rgrid)
- 
         basis(:,1) = (2.0d0*alpha*rgrid(:))**(l+1) *exp(-alpha*rgrid(:))
         basis(:,2) = 2.0d0*(l+1-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l+1) *exp(-alpha*rgrid(:))
 
@@ -25,19 +24,6 @@ end subroutine LaguerreSub
 
 program main
          implicit none
-
-
-         INTERFACE
-         subroutine LaguerreSub(alpha, l, N, rgrid, basis)
-         integer :: i,j,nr
-         integer, INTENT(IN) :: N
-         real, INTENT(IN) :: alpha, l
-         real , intent(in) :: rgrid(:)
-         real :: basis(:,:)
-         end subroutine
-         END INTERFACE
-
-         
 
 
          real :: normalise, p
@@ -68,8 +54,8 @@ program main
 
 
          !use recurrence relation to compute the basis functions
-         CALL LaguerreSub(alpha, l, N, rgrid, basis)
-
+         CALL LaguerreSub(alpha, l, nr, N, rgrid, basis)
+        
          !implement normalisation condition using simplified factorial
          do i = 1, N
                  p=1.0
@@ -83,6 +69,7 @@ program main
 
  
  
+         
          Print *, "RGRID: basis 1 : basis 2 : basis 3 : basis 4 \n"
         do j = 1, nr
                 Print *, rgrid(j), basis(j,1), basis(j,2), basis(j,3), basis(j,4)
