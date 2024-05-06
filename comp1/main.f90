@@ -30,9 +30,18 @@ program main
          real :: alpha, l
          real :: dr, rmax
          integer :: N, nr
-         integer :: i,j,k
+         integer :: i,j
          real, dimension(:), allocatable :: rgrid
          real, dimension(:,:), allocatable :: basis
+         
+         !add in overlap and hamiltonian
+         real, dimension(:,:), allocatable :: H
+         real, dimension(:,:), allocatable :: B
+         real, dimension(:,:), allocatable :: K
+         ! energies and expansion coefficients
+         real, dimension(:,:), allocatable :: w
+         real, dimension(:,:), allocatable :: z
+         real, dimension(:,:), allocatable :: V
          !open file location: hard coded for now but could become flexible
          !read stored values into relevent variables
          
@@ -47,6 +56,13 @@ program main
          ! based on options from file, allocate appropriate memory to rgrid and the basis array
          allocate(rgrid(nr))
          allocate(basis(nr,N))
+         allocate(H(N,N))
+         allocate(B(N,N))
+         allocate(V(N,N))
+         allocate(K(N,N))
+         allocate(w(N,1)) 
+         allocate(z(N,N))
+
          !allocate values to the rgrid
          do i = 1, nr
                 rgrid(i) = (i-1)*dr
@@ -61,7 +77,7 @@ program main
                  p=1.0
                  do j = 0, 2*l
                          p = real(p*(i+2*l-j))
-                         Print *, p, j
+                         !Print *, p, j
                  end do
                  normalise = sqrt(alpha /((i+l)* p))
                  basis(:,i) = normalise*basis(:,i)  
@@ -71,13 +87,75 @@ program main
  
          
          Print *, "RGRID: basis 1 : basis 2 : basis 3 : basis 4 \n"
-        do j = 1, nr
+         do j = 1, nr
                 Print *, rgrid(j), basis(j,1), basis(j,2), basis(j,3), basis(j,4)
-        end do
+         end do
+
+        
+         !calculate overlap matrix
+         B = 0.0d0
+         do i =1, N-1
+                 B(i,i) = 1.0d0
+                 ! basis function matrix elements are real valued, thus dot product is the same as inner prouct here
+                 B(i,i+1) = DOT_PRODUCT(basis(:,i),basis(:,i+1))
+                 B(i+1,i) = B(i,i+1)
+         end do
+         B(N,N) = 1.0d0 !what??
+         !manually check the B-Matrix
+         Print *, "B-Matrix:"
+         do i = 1,N
+                 Print *, B(i,:)
+         end do
+         
+         !calculate V matrix:
+         V = 0.0d0
+         do i=1,N
+                 V(i,i) = -(alpha/(i+l))
+         end do
+         
+         Print *, "V-Matrix:"
+         
+         do i = 1,N
+                 Print *, V(i,:)
+         end do
+
+         !compute H-matrix Elements
+         H = (-alpha**2/2.0) * B
+         do i =1,N-1
+                 H(i,i) = H(i,i) + (alpha**2 - (alpha/(i+l))) 
+         end do
 
 
+         Print *, "H-Matrix"
+         do i = 1,N
+                 Print *, H(i,:)
+         end do
+        
+         
+
+
+
+ 
+         !calculate the Hamiltonian
 
 end program
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
