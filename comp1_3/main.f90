@@ -122,12 +122,11 @@ program main
          do i =1,N
                  H(i,i) = H(i,i) + alpha**2 - (alpha/(i+l)) 
          end do
-
-         Print *, "B-Matrix after creating H:"
+         
+         Print *, "H-Matrix"
          do i = 1,N
-                 Print *, B(i,:)
+                 Print *, H(i,:)
          end do
-
          
          CALL rsg(N,N,H,B,w,1,z,ier)
          
@@ -142,17 +141,12 @@ program main
                  Print *, V(i,:)
          end do   
          
-         Print *, "H-Matrix"
-         do i = 1,N
-                 Print *, H(i,:)
-         end do    
-         
          Print *, "W"         
          Print *, w
 
          Print *, "Z matrix"
          do i=1,N
-                 Print *, z(:,i)
+                 Print *, z(i,:)
          end do
 
          !recover wavefunctions:
@@ -171,6 +165,16 @@ program main
          end do
          close(1)
  
+         deallocate(rgrid)
+         deallocate(basis)
+         deallocate(H)
+         deallocate(B)
+         deallocate(V)
+         deallocate(w)
+         deallocate(z)
+         deallocate (wf)
+         
+
        
 
 end program

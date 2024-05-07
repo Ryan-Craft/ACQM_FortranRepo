@@ -31,6 +31,6 @@ set yrange [-12:12]
 set grid
 
 
-plot psi11(x), psi21(x), psi31(x), psi41(x), 'basisout.txt' using 1:2, 'basisout.txt' using 1:3, 'basisout.txt' using 1:4, 'basisout.txt' using 1:5, 'wfout.txt' using 1:2, 'wfout.txt' using 1:3
+plot psi11(x), psi21(x), psi31(x), psi41(x), 'basisout.txt' using 1:2, 'basisout.txt' using 1:3, 'basisout.txt' using 1:4, 'basisout.txt' using 1:5#, 'wfout.txt' using 1:2, 'wfout.txt' using 1:3
 
 
