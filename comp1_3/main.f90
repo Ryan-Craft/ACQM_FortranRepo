@@ -106,10 +106,10 @@ program main
                  B(i+1,i) = B(i,i+1)
          end do
          B(N,N) = 1.0d0 
-         Print *, "B-Matrix:"
-         do i = 1,N
-                 Print *, B(i,:)
-         end do
+         !Print *, "B-Matrix:"
+         !do i = 1,N
+         !        Print *, B(i,:)
+         !end do
          
          !calculate V matrix:
          V = 0.0d0
@@ -123,31 +123,25 @@ program main
                  H(i,i) = H(i,i) + alpha**2 - (alpha/(i+l)) 
          end do
          
-         Print *, "H-Matrix"
-         do i = 1,N
+         !Print *, "H-Matrix"
+         !do i = 1,N
                  Print *, H(i,:)
-         end do
+         !end do
          
          CALL rsg(N,N,H,B,w,1,z,ier)
-         
-         !Output Block
-         Print *, "B-Matrix after RSG CALL:"
-         do i = 1,N
-                 Print *, B(i,:)
-         end do        
 
-         Print *, "V-Matrix:"
-         do i = 1,N
-                 Print *, V(i,:)
-         end do   
+         !Print *, "V-Matrix:"
+         !do i = 1,N
+         !        Print *, V(i,:)
+         !end do   
          
-         Print *, "W"         
-         Print *, w
+         !Print *, "W"         
+         !Print *, w
 
-         Print *, "Z matrix"
-         do i=1,N
-                 Print *, z(i,:)
-         end do
+         !Print *, "Z matrix"
+         !do i=1,N
+         !        Print *, z(i,:)
+         !end do
 
          !recover wavefunctions:
          wf = 0.0d0
@@ -164,16 +158,22 @@ program main
                          write(1, '(*(f12.8))'), rgrid(i), wf(i,:)
          end do
          close(1)
+         
+         open(1, file='wout.txt',action='write', access='append')
+         do i =1,N
+                 write(1, '(*(f12.8))'), real(N), w(i,1)
+         end do
  
          deallocate(rgrid)
          deallocate(basis)
-         deallocate(H)
-         deallocate(B)
-         deallocate(V)
-         deallocate(w)
-         deallocate(z)
-         deallocate (wf)
-         
+         if (N>1) then
+            deallocate(H)
+            deallocate(B)
+            deallocate(V)
+            deallocate(w)
+            deallocate(z)
+            deallocate(wf)
+         endif
 
        
 
