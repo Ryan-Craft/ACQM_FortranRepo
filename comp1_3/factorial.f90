@@ -2,10 +2,11 @@
 program factorial
 
         integer :: i,t
-        real :: a, l, k, p
-        real :: f1, f2, s
+        integer*8 :: p
+        real :: a, l,k
+        real*8 :: f1, f2, s
        
-        k=60000.0
+        k= 2097150
 
         a=1.0
         l=1.0
@@ -18,7 +19,7 @@ program factorial
         !implement my new method
         p=1.0
         do i = 0, 2*l
-                p = real(p*(k+2*l-i)) 
+                p = p*(k+2*l-i)
                 Print *, p, i
         end do
 

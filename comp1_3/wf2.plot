@@ -17,6 +17,9 @@ set ylabel "Ψ_{i}(r)"
 
 set xlabel font ",14"
 set ylabel font ",14"
+set tics font ",12"
+set key font ",12"
+
 
 plot two_p(x), three_p(x), four_p(x) , 'wfout.txt' using 1:2 t "2p from program", 'wfout.txt' using 1:3 t "3p from program", 'wfout.txt' using 1:4 t "4p from program"
 

@@ -26,9 +26,10 @@ program main
          implicit none
 
 
-         real*8 :: normalise, p
+         real*8 :: normalise
          real :: alpha, l
          real :: dr, rmax
+         integer*8 :: p
          integer :: N, nr, ier
          integer :: i,j
          real, dimension(:), allocatable :: rgrid
@@ -79,7 +80,7 @@ program main
          do i = 1, N
                  p=1.0
                  do j = 0, 2*l
-                         p = real(p*(i+2*l-j))
+                         p = p*(i+2*l-j)
                          Print *, p, j
                  end do
                  normalise = sqrt(alpha /((i+l)* p))
@@ -118,8 +119,6 @@ program main
          do i =1,N
                  H(i,i) = H(i,i) + alpha**2 - (alpha/(i+l)) 
          end do
-         
-                 Print *, H(i,:)
          
          CALL rsg(N,N,H,B,w,1,z,ier)
 
