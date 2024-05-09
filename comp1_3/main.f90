@@ -26,7 +26,7 @@ program main
          implicit none
 
 
-         real :: normalise, p
+         real*8 :: normalise, p
          real :: alpha, l
          real :: dr, rmax
          integer :: N, nr, ier
@@ -106,10 +106,6 @@ program main
                  B(i+1,i) = B(i,i+1)
          end do
          B(N,N) = 1.0d0 
-         !Print *, "B-Matrix:"
-         !do i = 1,N
-         !        Print *, B(i,:)
-         !end do
          
          !calculate V matrix:
          V = 0.0d0
@@ -123,25 +119,10 @@ program main
                  H(i,i) = H(i,i) + alpha**2 - (alpha/(i+l)) 
          end do
          
-         !Print *, "H-Matrix"
-         !do i = 1,N
                  Print *, H(i,:)
-         !end do
          
          CALL rsg(N,N,H,B,w,1,z,ier)
 
-         !Print *, "V-Matrix:"
-         !do i = 1,N
-         !        Print *, V(i,:)
-         !end do   
-         
-         !Print *, "W"         
-         !Print *, w
-
-         !Print *, "Z matrix"
-         !do i=1,N
-         !        Print *, z(i,:)
-         !end do
 
          !recover wavefunctions:
          wf = 0.0d0

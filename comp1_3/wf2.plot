@@ -9,6 +9,15 @@ set xrange [-0.1:35]
 set yrange [-0.75:0.8]
 set grid
 
+set title "l=1,α=1, 2p, 3p and 4p Hydrogen Radial Wavefunctions\n vs N=500 Laguerre Basis Approximations"
+set title font ",12"
+
+set xlabel "Radius (a_{0})"
+set ylabel "Ψ_{i}(r)"
+
+set xlabel font ",14"
+set ylabel font ",14"
+
 plot two_p(x), three_p(x), four_p(x) , 'wfout.txt' using 1:2 t "2p from program", 'wfout.txt' using 1:3 t "3p from program", 'wfout.txt' using 1:4 t "4p from program"
 
 

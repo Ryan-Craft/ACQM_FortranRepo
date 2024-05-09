@@ -16,9 +16,10 @@ set ylabel "Ψ_{i}(r)"
 
 set xlabel font ",14"
 set ylabel font ",14"
+set tics font ",12"
+set key font ",12"
 
 
 plot one_s(x) lc 1, two_s(x) lc 2, three_s(x) lc 6, 'wfout.txt' using 1:2 t "1s from program" pointtype 2 lc 8,'wfout.txt' using 1:3 t "2s from program" pointtype 6 lc 8, 'wfout.txt' using 1:4 t "3s from program" pointtype 4 lc 8
-set xtics (0, 5, 10, 20, 30, 40, 50, "inf" 60 )
 
 

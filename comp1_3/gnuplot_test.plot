@@ -1,6 +1,6 @@
 
-l=0
-a=1
+l=1
+a=2
 
 expo(x) = 2*a*x
 base(x) = (2*a*x)**(l+1) * exp(-a*x)
@@ -26,11 +26,19 @@ psi31(x) = base(x) * L2(x) * norm3
 psi41(x) = base(x) * L3(x) * norm4
 
 
-set xrange [-0.1:20]
-set yrange [-12:12]
+set key font ",14"
+set title "First 4 Basis functions, Analytical and Computed for l=1, alpha=2"
+set title font ",14"
+set ylabel "Basis Function Value"
+set xlabel "r (a_0)"
+set ylabel font ",12"
+set xlabel font ",12"
+
+set xrange [-0.1:15]
+set yrange [-1:1]
 set grid
 
 
-plot psi11(x), psi21(x), psi31(x), psi41(x), 'basisout.txt' using 1:2, 'basisout.txt' using 1:3, 'basisout.txt' using 1:4, 'basisout.txt' using 1:5#, 'wfout.txt' using 1:2, 'wfout.txt' using 1:3
+plot psi11(x) t "Analytical φ10(r)", psi21(x) t "Analytical φ20(r)", psi31(x) t "Analytical φ10(r)", psi41(x) t "Analytical φ40(r)", 'basisout.txt' using 1:2 t "Compte φ10(r)", 'basisout.txt' using 1:3 t "Compte φ20(r)", 'basisout.txt' using 1:4 t "Compte φ30(r)", 'basisout.txt' using 1:5 t "Compte φ40(r)"
 
 
