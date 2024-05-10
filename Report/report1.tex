@@ -1,9 +1,6 @@
 \documentclass{article}
 \usepackage{graphicx, multicol} % Required for inserting images
-\usepackage{amsfonts,amssymb,amsmath,mathbbol,amsthm,amstext,esint,mathtools,nccmath,upgreek}
-\graphicspath{ {../Images/} }
-\DeclareSymbolFontAlphabet{\mathbb}{AMSb}
-\DeclareSymbolFontAlphabet{\mathbbl}{bbold}
+\usepackage{amsfonts,amssymb,amsmath,mathbbol,amsthm,amstext,esint,nccmath,upgreek}
 \usepackage{graphics,graphicx,epsfig, xcolor, soul}
 \usepackage[normalem]{ulem}
 \usepackage[margin={2cm,2cm}]{geometry}
@@ -285,9 +282,57 @@ program main
     Increasing $\alpha$ decreases the range of the basis functions such that they asymptotically decay to zero faster, expected as all of the functions $\propto e^{-\alpha r}$ (compare figures \ref{l0a1} and \ref{l0a2}). Increasing $l$ for constant $\alpha$ results in a suppression of the wavefunction at the origin (see figures \ref{l0a1}, \ref{l0a2} vs \ref{l1a1}, \ref{l1a2}). The $\alpha$ parameter may produce more for lower N depending on the energy states of interest, if it allows the basis functions to more quickly approximate the fall-off of the true wavefunction. Similar could be said for smaller alpha. In all cases we see a perfect agreement  between the analytical basis functions and the vectorised basis stored in the array.
     
     
+    \subsection{Problem 2}
+    
+    We begin with the Kinetic energy matrix expression:
+    \large
+    \begin{gather}
+    	K_{ij} = \bra{\phi_i} \frac{L^2}{2r^2} -\frac{1}{2r}\frac{\partial^2}{\partial r^2} \ket{\phi_j}
+    \end{gather}
+    \normalsize
+    
+    Which we integrate over a solid angle and $r^2dr$
+    \large
+    \begin{gather}
+    	K_{ij} = \int_{0}^{\infty}\int_{\Omega} r^2drd\Omega \frac{1}{r}\phi_{k_il_i}(r)Y^{m_i}_{l_i} (\hat{\vec{r}}) \left[ \frac{L^2}{2r^2} -\frac{1}{2r}\frac{\partial^2}{\partial r^2}(r\dotproduct{}) \right] \frac{1}{r}\phi_{k_jl_j}(r)Y^{m_j}_{l_j}(\hat{\vec{r}})
+    \end{gather}
+    \normalsize
+    
+    We cancel the $r$'s and apply the $L^2$ operator on the spherical harmonics we get:
+    \large
+    \begin{gather}
+    	K_{ij} = \int_{0}^{\infty}\int_{\Omega} drd\Omega \phi_{k_il_i}(r)Y^{m_i}_{l_i} (\hat{\vec{r}}) \left[ \frac{l(l+1)}{2r^2} -\frac{1}{2}\frac{\partial^2}{\partial r^2} \right] \phi_{k_jl_j}(r)Y^{m_j}_{l_j}(\hat{\vec{r}})
+    \end{gather}
+    \normalsize
+    
+    We separate out the spherical harmonics to get the two Kronecker delta functions;
+    \large
+    \begin{gather}
+    	K_{ij} = \int_{0}^{\infty} dr \phi_{k_il_i}(r) \left[ \frac{l(l+1)}{2r^2} -\frac{1}{2}\frac{\partial^2}{\partial r^2} \right] \phi_{k_jl_j}(r) \int_{\Omega}d\Omega Y^{m_i}_{l_i}(\hat{\vec{r}})Y^{m_j}_{l_j}(\hat{\vec{r}})\\
+    	\\
+    	K_{ij} = \int_{0}^{\infty} dr \phi_{k_il_i}(r) \left[ \frac{l(l+1)}{2r^2} -\frac{1}{2}\frac{\partial^2}{\partial r^2} \right] \phi_{k_jl_j}(r) \delta_{l_il_j} \delta_{m_im_j}
+    \end{gather}
+    \normalsize
+    
+    We make the substitutions $x=2\alpha r$ , $dx=2\alpha dr$ and convert to a form in $x$:
+    \large
+    \begin{gather}
+    	K_{ij} = -\alpha\int_{0}^{\infty} dx \phi_{k_il_i}(x) \left[\frac{\partial^2}{\partial x^2} -\frac{l(l+1)}{x^2}\right] \phi_{k_jl_i}(x) \delta_{l_il_j} \delta_{m_im_j}\\
+    \end{gather}
+    \normalsize
+    
+    In the substitution we get the basis function in the form:
+    \large
+    \begin{gather}
+    	\phi_{k_il_i}(x) = A_{k_il_i} x^{l+1} e^{-x/2} L^{2l+1}_{k-1}(x)
+    \end{gather}   
+    \normalsize
     
     
     
+
+
+ 
     
     \subsection{Problem 3}
     
