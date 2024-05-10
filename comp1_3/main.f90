@@ -6,9 +6,9 @@ subroutine LaguerreSub(alpha, l, nr, N, rgrid, basis)
         integer :: i,j
         integer, intent(in) :: nr
         integer, INTENT(IN) :: N
-        real, INTENT(IN) :: alpha, l
-        real, dimension(nr), INTENT(IN) :: rgrid
-        real, dimension(nr,N) :: basis
+        real*8, INTENT(IN) :: alpha, l
+        real*8, dimension(nr), INTENT(IN) :: rgrid
+        real*8, dimension(nr,N) :: basis
         
         basis(:,1) = (2.0d0*alpha*rgrid(:))**(l+1) *exp(-alpha*rgrid(:))
         basis(:,2) = 2.0d0*(l+1-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l+1) *exp(-alpha*rgrid(:))
@@ -27,8 +27,8 @@ program main
 
 
          real*8 :: normalise
-         real :: alpha, l
-         real :: dr, rmax
+         real*8 :: alpha, l
+         real*8 :: dr, rmax
          integer*8 :: p
          integer :: N, nr, ier
          integer :: i,j
@@ -36,13 +36,13 @@ program main
          real, dimension(:,:), allocatable :: basis
          
          !add in overlap and hamiltonian
-         real, dimension(:,:), allocatable :: H
-         real, dimension(:,:), allocatable :: B
-         real, dimension(:,:), allocatable :: K
+         real*8, dimension(:,:), allocatable :: H
+         real*8, dimension(:,:), allocatable :: B
+         real*8, dimension(:,:), allocatable :: K
          ! energies and expansion coefficients
-         real, dimension(:,:), allocatable :: w
-         real, dimension(:,:), allocatable :: z
-         real, dimension(:,:), allocatable :: V
+         real*8, dimension(:,:), allocatable :: w
+         real*8, dimension(:,:), allocatable :: z
+         real*8, dimension(:,:), allocatable :: V
          ! create array for wavefunctions
          real,dimension(:,:), allocatable :: wf
 
@@ -81,10 +81,10 @@ program main
                  p=1.0
                  do j = 0, 2*l
                          p = p*(i+2*l-j)
-                         Print *, p, j
+                         !Print *, p, j
                  end do
                  normalise = sqrt(alpha /((i+l)* p))
-                 Print *, "Norm:: ", normalise
+                 !Print *, "Norm:: ", normalise
                  basis(:,i) = normalise*basis(:,i)  
          end do
 
