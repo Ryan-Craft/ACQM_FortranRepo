@@ -29,7 +29,7 @@ program main
          real :: normalise, p
          real :: alpha, l
          real :: dr, rmax
-         integer :: N, nr
+         integer :: N, nr, ier
          integer :: i,j
          real, dimension(:), allocatable :: rgrid
          real, dimension(:,:), allocatable :: basis
@@ -42,6 +42,9 @@ program main
          real, dimension(:,:), allocatable :: w
          real, dimension(:,:), allocatable :: z
          real, dimension(:,:), allocatable :: V
+         ! create array for wavefunctions
+         real,dimension(:,:), allocatable :: wf
+
          !open file location: hard coded for now but could become flexible
          !read stored values into relevent variables
          
@@ -59,9 +62,9 @@ program main
          allocate(H(N,N))
          allocate(B(N,N))
          allocate(V(N,N))
-         allocate(K(N,N))
          allocate(w(N,1)) 
          allocate(z(N,N))
+         allocate (wf(nr,N))
 
          !allocate values to the rgrid
          do i = 1, nr
@@ -77,20 +80,22 @@ program main
                  p=1.0
                  do j = 0, 2*l
                          p = real(p*(i+2*l-j))
-                         !Print *, p, j
+                         Print *, p, j
                  end do
                  normalise = sqrt(alpha /((i+l)* p))
+                 Print *, "Norm:: ", normalise
                  basis(:,i) = normalise*basis(:,i)  
          end do
 
  
  
+         !write basis to file for plotting 
          
-         Print *, "RGRID: basis 1 : basis 2 : basis 3 : basis 4 \n"
-         do j = 1, nr
-                Print *, rgrid(j), basis(j,1), basis(j,2), basis(j,3), basis(j,4)
+         open(1, file='basisout.txt', action='write')
+         do i =1,nr
+                         write(1, '(*(f12.8))'), rgrid(i), basis(i,:)
          end do
-
+         close(1)
         
          !calculate overlap matrix
          B = 0.0d0
@@ -101,11 +106,6 @@ program main
                  B(i+1,i) = B(i,i+1)
          end do
          B(N,N) = 1.0d0 !what??
-         !manually check the B-Matrix
-         Print *, "B-Matrix:"
-         do i = 1,N
-                 Print *, B(i,:)
-         end do
          
          !calculate V matrix:
          V = 0.0d0
@@ -113,30 +113,57 @@ program main
                  V(i,i) = -(alpha/(i+l))
          end do
          
-         Print *, "V-Matrix:"
-         
-         do i = 1,N
-                 Print *, V(i,:)
-         end do
 
          !compute H-matrix Elements
          H = (-alpha**2/2.0) * B
-         do i =1,N-1
-                 H(i,i) = H(i,i) + (alpha**2 - (alpha/(i+l))) 
+         do i =1,N
+                 H(i,i) = H(i,i) + alpha**2 - (alpha/(i+l)) 
          end do
 
+         
+         CALL rsg(N,N,H,B,w,1,z,ier)
+         
+         !Output Block
+         Print *, "B-Matrix:"
+         do i = 1,N
+                 Print *, B(i,:)
+         end do 
 
+         Print *, "V-Matrix:"
+         do i = 1,N
+                 Print *, V(i,:)
+         end do   
+         
          Print *, "H-Matrix"
          do i = 1,N
                  Print *, H(i,:)
+         end do    
+         
+         Print *, "W"         
+         Print *, w
+
+         Print *, "Z matrix"
+         do i=1,N
+                 Print *, z(:,i)
          end do
-        
+
+         !recover wavefunctions:
+         wf = 0.0d0
+         do i =1,N
+                 do j = 1,N
+                         wf(:,i) = z(j,i)*basis(:,j) + wf(:,i)
+                         !Print *, wf(:,i)
+                 end do
+         end do
          
 
-
-
+         open(1, file='wfout.txt', action='write')
+         do i =1,nr
+                         write(1, '(*(f12.8))'), rgrid(i), wf(i,:)
+         end do
+         close(1)
  
-         !calculate the Hamiltonian
+       
 
 end program
 

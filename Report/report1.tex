@@ -52,11 +52,11 @@
 
 \begin{document}
 \noindent
-
 	\title{Computational Assignment 1: Using the Laguerre Basis to get Hydrogen Energies and Radial Wavefuctions}
     \maketitle 
     
     \section{Problem 1}
+    Find the code for this assignment at the public github repo \url{https://github.com/Ryan-Craft/ACQM_FortranRepo.git}, inside of comp1\_3/main.f90. 
     \label{problem 1}
     
     Solutions to the Schrodinger equation for the Hydrogen atom come in the separable form:
@@ -65,11 +65,6 @@
     \end{gather}
     
     Where $\Phi_{nl}(r)$ are the spherically symmetric radially dependent parts of the wavefunction and $Y_{l}^m(\hat{\vec{r}})$ are the Spherical Harmonics, for the quantum numbers n,l and m, representing the principal, angular and magnetic quantum numbers. 
-    
-    These wavefunctions can be represented as:
-    \begin{gather}
-    	\Phi_{nlm}(\vec{r}) =  \Phi_{nl}(r)*Y_{l}^m(\hat{\vec{r}})
-    \end{gather}
     
     Analytical solutions to the bound state radial part of the hydrogen atom are completely known, the first few relevant ones for the rest of this report follow:
     \large
@@ -112,7 +107,7 @@
     	\phi_{kl}(r) = \sqrt{\frac{\alpha_l (k-1)!}{(k+l)(k+2l)!}}(2\alpha_l r)^{l+1} e^{-\alpha_l r} L^{2l+1}_{k-1}(2\alpha_l r)
     \end{gather}
     
-    We do not want to store arbitrarily large Laguerre basis functions, so we use a recurrence relation for the Laguerre polynomials which gives the following recurrence relation:
+    We do not want to store arbitrarily large numbers of Laguerre polynomials, so we use a recurrence relation for the Laguerre polynomials such that we can define all of the basis functions from only two starter functions:
     \begin{gather}
     	\tilde{\phi}_{kl}(r) = \frac{2(k-1+l-\alpha_lr)\tilde{\phi}_{k-1,l}(r) - (k+2l-1)\tilde{\phi}_{k-2,l}(r)}{k-1}
     \end{gather}
@@ -124,13 +119,13 @@
     	\tilde{\phi}_{2l}(r) = 2(l+1-\alpha r)(2\alpha r)^{l+1}e^{-\alpha r}
     \end{gather}
     
-    Which can be used to reconstruct any of the basis functions through:
+    Which can be used to reconstruct any of the normalised basis functions through:
     \begin{gather}
     	\phi_{kl}(r) = \sqrt{\frac{\alpha_l (k-1)!}{(k+l)(k+2l)!}}\tilde{\phi}_{kl}(r)
     \end{gather}
     
-    To allow real type variables of FORTRAN to handle the factorials, we can simplify the normalisation factor. First we consider the behaviour of the fraction
-    $\frac{(k-1)!}{(k+2l)!}$
+    Computer variables offer only limited storage for processes such as factorial evaluation, so we need to simplify the normalisation constant in order to keep high orders of precision. First we consider the behaviour of the fraction
+    $(k-1)!/(k+2l)!$:
     
     \begin{gather}
     	\frac{(k-1)!}{(k+2l)!} = \frac{(k-1)!}{(k+2l)(k+2l-1)(k+2l-2)...(k+2l-x)!}
@@ -150,17 +145,18 @@
     	do i = 1, N
     		p=1.0
 	    	do j = 0, 2*l
-	    		p = real(p*(i+2*l-j))
+	    		p = p*(i+2*l-j)
 	    		!Print *, p, j
 	    	end do
-    	normalise = sqrt(alpha /((i+l)* p))
-    	!Print *, "Norm:: ", normalise
-    	basis(:,i) = normalise*basis(:,i)
+	    	normalise = sqrt(alpha /((i+l)* p))
+	    	!Print *, "Norm:: ", normalise
+	    	basis(:,i) = normalise*basis(:,i)
     	end do
     \end{lstlisting}
     
-    To test the bounds of this method, if we compute using the repeated multiplication method and use the Gamma function in FORTRAN to write the same normalisation coefficient directly from the formula; for $\alpha$=1 l=1, the k limit for the gamma method is 32. This test was run with only real data types, so the k+2l value was expected to be much lower before the function could not hold accurate values. After this point, the gamma formula returns 0.0, and subsequently NaN. However, the method described above continues to return non-zero results even for k=150, but the accuracy of these values has only been verified up to k=40. This sets an upper safe limit of k+2l $\leq$ 41, without further testing.
+    In this formulation we have set \textit{p} as a integer*8, so that it can hold up to $2^{63}$. We store the normalisation factor \textit{normalise} as a real * 8. So we can store the normalisation condition to a high degree of precision, and we do not run the risk of integer overflow until very large values of k. 
     
+    $2^{63}$ equates to 9,223,372,036,854,775,808. For an l=1, we need k=2,097,151 before the algorithm overflows the integer \textit{p}. So our limit for \textit{k} and \textit{p} are close to $k+2l < 2,097,151$ before we no longer receive a value into \textit{normalise}. Additionally, because we are using real*8 to store the normalisation constant, we keep 16 decimal places of precision, as we convert to real only when we perform the square root.
     
     Generating the basis functions was done by the subroutine \textit{LaguerreSub}, which can be found at the top of the \textit{main.f90} program in the code repository. The code generates \textit{N} number of basis functions based on the recurrence relation outlined above in the manner shown in the below code listing. Please note that lines have been wrapped for readability here are not wrapped in the code.
     
@@ -201,9 +197,10 @@ program main
 	implicit none
 	
 	
-	real :: normalise, p
+	real*8 :: normalise
 	real :: alpha, l
 	real :: dr, rmax
+	integer*8 :: p
 	integer :: N, nr, ier
 	integer :: i,j
 	real, dimension(:), allocatable :: rgrid
@@ -212,6 +209,7 @@ program main
 	!add in overlap and hamiltonian
 	real, dimension(:,:), allocatable :: H
 	real, dimension(:,:), allocatable :: B
+	real, dimension(:,:), allocatable :: K
 	! energies and expansion coefficients
 	real, dimension(:,:), allocatable :: w
 	real, dimension(:,:), allocatable :: z
@@ -366,8 +364,8 @@ CALL LaguerreSub(alpha, l, nr, N, rgrid, basis)
 do i = 1, N
 	p=1.0
 	do j = 0, 2*l
-		p = real(p*(i+2*l-j))
-		!Print *, p, j
+		p = p*(i+2*l-j)
+		Print *, p, j
 	end do
 	normalise = sqrt(alpha /((i+l)* p))
 	Print *, "Norm:: ", normalise
