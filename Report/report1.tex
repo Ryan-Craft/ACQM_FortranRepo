@@ -54,6 +54,7 @@
     
     \section{Problem 1}
     Find the code for this assignment at the public github repo \url{https://github.com/Ryan-Craft/ACQM_FortranRepo.git}, inside of comp1\_3/main.f90. 
+    Images have been kept at Report/Images if you cannot successfully recreate the plots. Please also see the README.txt in the comp1\_3 folder for notes on the GNUPLOT scripts and associated data files. 
     \label{problem 1}
     
     Solutions to the Schrodinger equation for the Hydrogen atom come in the separable form:
@@ -63,7 +64,7 @@
     
     Where $\Phi_{nl}(r)$ are the spherically symmetric radially dependent parts of the wavefunction and $Y_{l}^m(\hat{\vec{r}})$ are the Spherical Harmonics, for the quantum numbers n,l and m, representing the principal, angular and magnetic quantum numbers. 
     
-    Analytical solutions to the bound state radial part of the hydrogen atom are completely known, the first few relevant ones for the rest of this report follow:
+    Analytical solutions to the bound state radial part of the hydrogen atom are completely known, the first few relevant ones for the rest of this report are below.
     \large
     \begin{center}
     	\begin{tabular}{lcc}\toprule
@@ -83,14 +84,14 @@
     \end{center}
     \normalsize
     
-    If we choose a set of basis functions $\phi_{j}$ for $k={1,2,\; ...\;, \infty}$ which form a complete basis on the Hilbert space, defined as:
+    If we choose a set of functions $\phi_{j}$ for $k={1,2,\; ...\;, \infty}$ which form a basis on the Hilbert space, defined as:
     \large
     \begin{gather}
     	\braket{\vec{r}}{\phi_j} = \frac{1}{r}\phi_{k_j,l_j}(r)Y^{m_j}_{l_j}(\hat{\vec{r}})
     \end{gather}
     \normalsize
     
-    These basis function can be used to recover high order approximations to the true radial wavefunction through a sum over a finite number of the basis functions in the following way:
+    These basis function can be used to recover approximations to the true radial wavefunction through a sum over a finite number of the basis functions in the following way:
    
     \large
     \begin{gather}
@@ -137,7 +138,7 @@
     	\sqrt{\frac{\alpha_l (k-1)!}{(k+l)(k+2l)!}} = \sqrt{\frac{\alpha_l}{(k+l)\Pi_{x=0}^{2l}(k+2l-x)}}
     \end{gather}
     
-    Implemented in the code with the following way:
+    Implemented in the code in the following way:
     \begin{lstlisting}[language=Fortran]
     	do i = 1, N
     		p=1.0
@@ -155,7 +156,7 @@
     
     $2^{63}$ equates to 9,223,372,036,854,775,808. For an l=1, we need k=2,097,151 before the algorithm overflows the integer \textit{p}. So our limit for \textit{k} and \textit{p} are close to $k+2l < 2,097,151$ before we no longer receive a value into \textit{normalise}. Additionally, because we are using real*8 to store the normalisation constant, we keep 16 decimal places of precision, as we convert to real only when we perform the square root.
     
-    Generating the basis functions was done by the subroutine \textit{LaguerreSub}, which can be found at the top of the \textit{main.f90} program in the code repository. The code generates \textit{N} number of basis functions based on the recurrence relation outlined above in the manner shown in the below code listing. Please note that lines have been wrapped for readability here are not wrapped in the code.
+    Generating the basis functions was done by the subroutine \textit{LaguerreSub}, which can be found at the top of the \textit{main.f90} program in the code repository. The code generates \textit{N} number of basis functions based on the recurrence relation outlined above in the manner shown in the below code listing. Please note that some lines have been wrapped for readability here which are not wrapped in the code.
     
 \begin{lstlisting}[language=Fortran]
 subroutine LaguerreSub(alpha, l, nr, N, rgrid, basis)
@@ -277,7 +278,10 @@ program main
     	\label{l1a2}
     \end{figure}
     
-    Increasing $\alpha$ decreases the range of the basis functions such that they asymptotically decay to zero faster, expected as all of the functions $\propto e^{-\alpha r}$ (compare figures \ref{l0a1} and \ref{l0a2}). Increasing $l$ for constant $\alpha$ results in a suppression of the wavefunction at the origin (see figures \ref{l0a1}, \ref{l0a2} vs \ref{l1a1}, \ref{l1a2}). The $\alpha$ parameter may produce more for lower N depending on the energy states of interest, if it allows the basis functions to more quickly approximate the fall-off of the true wavefunction. Similar could be said for smaller alpha. In all cases we see a near perfect agreement  between the analytical basis functions and the vectorised basis stored in the array.
+    Increasing $\alpha$ decreases the range of the basis functions such that they asymptotically decay to zero faster, expected as all of the functions $\propto e^{-\alpha r}$ (compare figures \ref{l0a1} and \ref{l0a2}). Increasing $l$ for constant $\alpha$ results in a suppression of the wavefunction at the origin (see figures \ref{l0a1}, \ref{l0a2} vs \ref{l1a1}, \ref{l1a2}). The $\alpha$ parameter may produce more for lower N depending on the energy states of interest, if it allows the basis functions to more quickly approximate the fall-off of the true wavefunction. Similar could be said for smaller alpha. 
+    
+    Interesting to note that the basis functions include a k=1, l=1 function. We know that the real wavefunction does not have a 1p state.
+    In all cases we see a near perfect agreement  between the analytical basis functions and the vectorised basis stored in the array.
     
     
     \subsection{Problem 2}
@@ -373,7 +377,7 @@ program main
     \large
     \begin{gather}
     	K_{ij} = \alpha A_{k_il_i} A_{k_jl_i} \frac{(k+2l)!}{(k-1)!}\delta_{ij} -
-    	\frac{\alpha^2}{2} \braket{\phi_{k_il_i}}{\phi_{k_jl_i}}\delta_{l_il_j} \delta_{m_im_j}
+    	\frac{\alpha^2}{2} \braket{\phi_{k_il_i}}{\phi_{k_jl_j}}\delta_{l_il_j} \delta_{m_im_j}
     \end{gather}
     \normalsize
     We have also converted from $x$ to $2\alpha r$ here also.
@@ -386,7 +390,7 @@ program main
     	\frac{\alpha^2}{2} \braket{\phi_{k_il_i}}{\phi_{k_jl_i}}\delta_{l_il_j} \delta_{m_im_j}
     \end{gather}
     \normalsize
-    $\delta_{l_il_j}\; \delta_{m_im_j}$ are absorbed into $\delta_{ij}. $
+    $\delta_{l_il_j}\; \delta_{m_im_j}$ are absorbed into $\delta_{ij}.$
 
 
  
@@ -394,7 +398,7 @@ program main
     \subsection{Problem 3}
     
     
-    Section \ref{problem 1} mentions that the radial component of the Hydrogen wavefunction can be determined by the infinite sum of the appropriate Laguerre based basis functions:
+    The radial component of the Hydrogen wavefunction can be determined by the infinite sum of the basis functions:
     \large
     \begin{gather}
     	\ket{\Phi} = \sum_{j}c_j\ket{\phi_j}
@@ -425,9 +429,9 @@ program main
 	\end{gather}
 	\normalsize
 	
-	As we increase N, functions in the basis ,we will get higher accuracy to the true functions. 
+	As we increase N, functions in the basis ,we will converge to the true eigenvectors, eigenvalues and wavefunction. 
 	
-	In \textit{main.f90} the provided \textit{rsh.f} function is used to solve this problem, and get approximations to the bound and continuum state hydrogen energy levels and recover the coefficients $c_{ij}$ which can be used in the finite sum:
+	In \textit{main.f90} the provided \textit{rsh.f} function is used to solve this matrix problem, and get approximations to the bound and continuum state hydrogen energy levels and recover the coefficients $c_{ij}$ which can be used in the finite sum:
 	\large
 	\begin{gather}
 		\Phi(r) = \sum_{j}^{N} c_{ji} \phi_j(r)
@@ -529,11 +533,7 @@ end do
 	
 \end{lstlisting}
 	
-	We have made use of the Kronecker delta functions where they can reduce the number of loop iterations for values of matricies that are always zero. 
-	For example, when defining the matrix for the Hamiltonian, we do not need to iterate over the whole thing, we need only add missing components to the diagonal after copying a modified overlap matrix. 
-	
-	
-	From this method we ca show that for $\alpha=1, l=0$, as we increase the nubmer of basis functions, we get a convergence in the Energies of the hydrogen atom to the analytically derived solutions (figures \ref{variedNbound} and \ref{variedNcont})
+	From this method we can show that for $\alpha=1, l=0$, as we increase the nubmer of basis functions, we get a convergence in the Energies of the hydrogen atom to the analytically derived solutions (figures \ref{variedNbound} and \ref{variedNcont}).
 	
 	\begin{figure}[H]
 		\centering
@@ -548,7 +548,7 @@ end do
 		\label{variedNcont}
 	\end{figure}
 	
-	Figures \ref{variedNbound} and \ref{variedNcont} demonstrate the convergence of the bound and continuum state energies for increased basis size. Figure \ref{variedNbound} shows that the bound state predictions for the energies converge to the true values fairly quickly for the lowest energy levels. For the continuum the predictions tend to fill out faster around $E=1$, and very large basis size is would be needed to make a good approximation to the continuum for the lowest energies. 
+	 Figure \ref{variedNbound} shows that the bound state predictions for the energies converge to the true values fairly quickly for the lowest energy levels. For the continuum the predictions tend to fill out faster around $E=1$, and very large basis size would be needed to fill out even the lowest energy continuum states. 
 	
 	\begin{figure}[H]
 		\centering
@@ -568,6 +568,8 @@ end do
 	For N=500, we calculate the first three bound state s-wave and p-wave radial wavefunctions using the finite summation of the basis functions with their coefficients, as previously outlined. These calculated wavefunction vectors are compared to the complete analytical solutions in figures \ref{swave} and \ref{pwave}. 
 	
 	We note high agreement between the analytical and calculated solutions, with a key anomaly. For the s-state solutions, the program returns a 2s wavefunction which is the negative of the normal analytical solution, the same is true for the 2p state. These negative solutions are also true solutions of the Schrodinger equation and deliver the same observable outcomes, due to the fact that observables are associated with the square of the wavefunction. 
+	
+	So these 'disagreements' with the analytical solutions come down to a matter of sign convention rather than erroneous calculation. The program should still give correct scattering results for these wavefunctions.
 	
 	\begin{figure}[H]
 		\centering
