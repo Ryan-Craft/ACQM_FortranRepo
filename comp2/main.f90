@@ -15,21 +15,18 @@ subroutine LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)
 
         !generate input and output arrays
         real*8, dimension(nr), INTENT(IN) :: rgrid
-        real*8, dimension(nr,N) :: basis
+        real*8, dimension(nr,num_func), INTENT(OUT) :: basis
         real, dimension(num_func), INTENT(IN) :: k_list
         real, dimension(num_func), INTENT(IN) :: l_list
-
-        basis(:,1) = (2.0d0*alpha*rgrid(:))**(l_list(1)+1) *exp(-alpha*rgrid(:))
-        basis(:,2) = 2.0d0*((l_list(1)+1)-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l_list(1)+1) *exp(-alpha*rgrid(:))
-
-        do i = 3, num_func
+        
+        do i = 1, num_func
               if(k_list(i) .eq. 1) then
                     basis(:,i) = (2.0d0*alpha*rgrid(:))**(l_list(i)+1) *exp(-alpha*rgrid(:))
               
               else if(k_list(i) .eq. 2) then
                     basis(:,i) = 2.0d0*((l_list(i)+1)-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l_list(i)+1) *exp(-alpha*rgrid(:))
               else
-                    basis(:,i) = (2*(k_list(i)-1+l_list(i)-alpha*rgrid(:))*basis(:,k_list(i)-1) - (k_list(i)+2*l_list(i)-1)*basis(:,k_list(i)-2) )  / (k_list(i)-1)
+                    basis(:,i) = (2.0d0*(k_list(i)-1+l_list(i)-alpha*rgrid(:))*basis(:,i-1) - (k_list(i)+2*l_list(i)-1)*basis(:,i-2) )  / (k_list(i)-1)
               end if
         end do
 
@@ -40,15 +37,11 @@ subroutine LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)
                        p = p*(k_list(i)+2*l_list(i)-j)
                        Print *, p, j
               end do
-              !normalise = sqrt(alpha /((k_list(i)+l_list(i))* p))
+              normalise = sqrt(alpha /((k_list(i)+l_list(i))* p))
               Print *, "Norm:: ", normalise
-              !basis(:,i) = normalise*basis(:,i)
+              basis(:,i) = normalise*basis(:,i)
 
         end do
-        
-
-
- 
         return
 end subroutine LaguerreSub
 
@@ -58,9 +51,9 @@ program main
 
 
          real*8 :: normalise
-         real*8 :: alpha, lmax, l
-         real*8 :: dr, rmax
-         integer :: N, nr, ier, par, m
+         real*8 :: alpha, lmax, l, lam
+         real*8 :: dr, rmax, li, lj, y_int, Rn, m, Yint
+         integer :: N, nr, ier, par
          integer :: i,j, num_func
          real, dimension(:), allocatable :: rgrid
          real, dimension(:,:), allocatable :: basis
@@ -80,6 +73,9 @@ program main
          real, dimension(:), allocatable :: k_list
          real, dimension(:), allocatable :: l_list
 
+         !numerical integration weights
+         real*8, dimension(:), allocatable :: weights
+
          !open file location: hard coded for now but could become flexible
          !read stored values into relevent variables
          
@@ -87,8 +83,12 @@ program main
          read(1,*) alpha, N, lmax, dr, rmax, par, m
          Print *, alpha, N, lmax, dr, rmax,  par, m
          close(1)
-         !calculate rgrid params
+         
+         !calculate rgrid params: number of grid elements needs to be odd
          nr = rmax/dr + 1
+         !if(modulo(nr,2)==0) then
+         !        nr = nr+1
+         !endif
          Print *, nr
 
          !number of basis functions is the same for each l, but the total number of basis functions for a parity is larger than N
@@ -103,8 +103,7 @@ program main
          end do
          Print *, num_func
 
-         ! lectures point out that I will essentially be using k_list and l_list to keep track of where the right basis are
-         ! for a given parity. We'll see how that works out down here somewhere
+         ! create klist and llist for later keeping track of l and k in the basis
          allocate(k_list(num_func), l_list(num_func))
          i=0
          do l=0, lmax
@@ -124,16 +123,19 @@ program main
          allocate(H(num_func,num_func))
          allocate(B(num_func,num_func))
          allocate(V(num_func,num_func))
-         !allocate(w(N,1)) 
-         !allocate(z(N,N))
+         allocate(K(num_func,num_func))
+         allocate(weights(nr))
+         allocate(w(num_func,1)) 
+         allocate(z(num_func,num_func))
          !allocate (wf(nr,N))
          
          !create rgrid
          do i = 1, nr
                 rgrid(i) = (i-1)*dr
          end do
-                    
+         
 
+         !establish basis for all k and l
          basis =0.0d0
          CALL LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)    
         
@@ -159,18 +161,63 @@ program main
                  Print *, B(i,:)
          end do 
 
+         ! K-Matrix elements
+         K = (-alpha**2/2.0d0)*B
+        
+         do i=1,num_func
+                 K(i,i) = K(i,i) + alpha**2
+         end do
+       
+         Print *, "K matrix ::"
+         do i=1,num_func
+                 Print *, K(i,:)
+         end do
 
          ! V-matrix elements
+                !generate weights for V
+         weights = 0.0d0
+         weights(1) = 1.0d0
+         do i=2, nr-1
+                 weights(i) = 2.0d0 + 2.0d0*mod(i+1,2)
+         end do
+         weights(nr) = 1.0d0
+         weights(:) = weights(:)*dr/3.0d0
+         
+         Print *, "WEIGHTS"
+         Print *, weights
+             
+         Rn = 0.0d0
+         V = 0.0d0
+         
+         do i=1, num_func
+                 do j=1, num_func
+                         li = l_list(i)
+                         lj = l_list(j)
+                 !calculate V matrix
+                         do lam=0, 2*lmax
+                                 y_int = Yint(li,m,lam,0.0d0,lj,m)
+                                 if(mod(lam,2.0d0) > 0) cycle 
+                                 V(i,j) = V(i,j) + sum(basis(:,j) * min(rgrid(:),Rn/2.0d0)**lam / max(rgrid(:),Rn/2.0d0)**(lam+1) * basis(:,i) * weights(:)) !* y_int
+                                         
+                         end do
+                         V(i,j) = -2.0d0 * V(i,j)
+                         !Print *, y_int
+                 end do
+         end do
+         
+                  
 
-         ! K-Matrix elements   
- 
- 
-         ! H = K + V
+         H=0.0d0
 
+         H = K + V
+         Print *, "V MATRIX::"
+         do i=1,num_func
+                 Print *, V(i,:)
+         end do
+                                                   
+         call rsg(num_func,num_func,H,B,w,1,z,ier)
 
-
-
-
+         Print *, w
 
  
  
@@ -180,8 +227,8 @@ program main
             deallocate(H)
             deallocate(B)
             deallocate(V)
-            !deallocate(w)
-            !deallocate(z)
+            deallocate(w)
+            deallocate(z)
             !deallocate(wf)
          endif
 
