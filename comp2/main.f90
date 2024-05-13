@@ -40,9 +40,9 @@ subroutine LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)
                        p = p*(k_list(i)+2*l_list(i)-j)
                        Print *, p, j
               end do
-              normalise = sqrt(alpha /((k_list(i)+l_list(i))* p))
+              !normalise = sqrt(alpha /((k_list(i)+l_list(i))* p))
               Print *, "Norm:: ", normalise
-              basis(:,i) = normalise*basis(:,i)
+              !basis(:,i) = normalise*basis(:,i)
 
         end do
         
@@ -86,7 +86,7 @@ program main
          open(unit=1, file="LaguerreParams.txt", action="read")
          read(1,*) alpha, N, lmax, dr, rmax, par, m
          Print *, alpha, N, lmax, dr, rmax,  par, m
-
+         close(1)
          !calculate rgrid params
          nr = rmax/dr + 1
          Print *, nr
@@ -137,12 +137,42 @@ program main
          basis =0.0d0
          CALL LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)    
         
-
-         do i=1,num_func
-               Print *, "BASIS ::", i
-               Print *, basis(:,i)
+         open(unit=1, file="basisout.txt", action="write")
+         do i=1,nr
+                 write(1, '(*(f12.8))'), rgrid(i), basis(i,:)
          end do
-        
+         close(1)
+
+         ! B matrix
+         ! its like the B matrix for a single l but they are next one another on the diagonal
+         B = 0.0d0
+         do i =1,num_func-1
+                 B(i,i) = 1.0d0
+                 l = l_list(i)
+                 j = k_list(i)
+                 if(l_list(i+1) /= l ) cycle
+                 B(i,i+1) = -0.5d0*sqrt(1.0d0-( (l*(l+1.0d0)) / ((j+l)*(j+l+1.0d0))))
+                 B(i+1,i) = B(i,i+1)
+         end do
+    
+         do i=1,num_func
+                 Print *, B(i,:)
+         end do 
+
+
+         ! V-matrix elements
+
+         ! K-Matrix elements   
+ 
+ 
+         ! H = K + V
+
+
+
+
+
+
+ 
  
          deallocate(rgrid)
          deallocate(basis)
