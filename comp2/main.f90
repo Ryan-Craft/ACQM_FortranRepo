@@ -1,26 +1,51 @@
 
-subroutine LaguerreSub(alpha, nr, N, rgrid, basis, num_func, k_list, l_list)
+subroutine LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)
         implicit none
-
-        ! initialise alpha, l, dr, rmax, N and others
-        integer :: i,j
+        
+        !generate local variables
+        integer*8 :: p
+        integer :: i,j, num_func
         real :: l
-        integer, intent(in) :: nr, num_func
-        integer, INTENT(IN) :: N
+        real*8 :: normalise
+        
+        !generate input and output variables
+        integer, intent(in) :: nr
+        integer, INTENT(IN) :: N      
         real*8, INTENT(IN) :: alpha
+
+        !generate input and output arrays
         real*8, dimension(nr), INTENT(IN) :: rgrid
         real*8, dimension(nr,N) :: basis
-        real, dimension(num_func) :: k_list
-        real, dimension(num_func) :: l_list
+        real, dimension(num_func), INTENT(IN) :: k_list
+        real, dimension(num_func), INTENT(IN) :: l_list
 
         basis(:,1) = (2.0d0*alpha*rgrid(:))**(l_list(1)+1) *exp(-alpha*rgrid(:))
-        basis(:,2) = 2.0d0*((l_list(1)+1)-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l_list(i)+1) *exp(-alpha*rgrid(:))
+        basis(:,2) = 2.0d0*((l_list(1)+1)-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l_list(1)+1) *exp(-alpha*rgrid(:))
 
-        !do i = 3, num_func
-           !basis(:,i) = (2*(k_list(i)-1+l_list(i)-alpha*rgrid(:))*basis(:,k_list(i)-1) - (k_list(i)+2*l_list(i)-1)*basis(:,k_list(i)-2) )  / (k_list(i)-1)
-        !end do
+        do i = 3, num_func
+              if(k_list(i) .eq. 1) then
+                    basis(:,i) = (2.0d0*alpha*rgrid(:))**(l_list(i)+1) *exp(-alpha*rgrid(:))
+              
+              else if(k_list(i) .eq. 2) then
+                    basis(:,i) = 2.0d0*((l_list(i)+1)-alpha*rgrid(:)) * (2.0d0*alpha*rgrid(:))**(l_list(i)+1) *exp(-alpha*rgrid(:))
+              else
+                    basis(:,i) = (2*(k_list(i)-1+l_list(i)-alpha*rgrid(:))*basis(:,k_list(i)-1) - (k_list(i)+2*l_list(i)-1)*basis(:,k_list(i)-2) )  / (k_list(i)-1)
+              end if
+        end do
+
+
+        do i = 1,num_func
+              p=1.0
+              do j = 0, 2*l_list(i)
+                       p = p*(k_list(i)+2*l_list(i)-j)
+                       Print *, p, j
+              end do
+              normalise = sqrt(alpha /((k_list(i)+l_list(i))* p))
+              Print *, "Norm:: ", normalise
+              basis(:,i) = normalise*basis(:,i)
+
+        end do
         
-        !basis(:,1) = (2.0d0*alpha*rgrid(:))**(0+1) *exp(-1*rgrid(:))
 
 
  
@@ -35,7 +60,6 @@ program main
          real*8 :: normalise
          real*8 :: alpha, lmax, l
          real*8 :: dr, rmax
-         integer*8 :: p
          integer :: N, nr, ier, par, m
          integer :: i,j, num_func
          real, dimension(:), allocatable :: rgrid
@@ -94,7 +118,6 @@ program main
          Print *, k_list
          Print *, l_list 
 
-
          ! based on options from file, allocate appropriate memory to rgrid and the basis array
          allocate(rgrid(nr))
          allocate(basis(nr,num_func))
@@ -111,15 +134,14 @@ program main
          end do
                     
 
-         CALL LaguerreSub(alpha, nr, N, rgrid, basis, num_func, k_list, l_list)    
-         Print *, "BASIS 1"
-         Print *, basis(:,1)
-         Print *, "BASIS 2"
-         Print *, basis(:,2) 
-         Print *, "BASIS 3"
-         Print *, basis(:,3)
-         Print *, "BASIS 4"
-         Print *, basis(:,4)
+         basis =0.0d0
+         CALL LaguerreSub(alpha, nr, N, rgrid, basis, k_list, l_list, num_func)    
+        
+
+         do i=1,num_func
+               Print *, "BASIS ::", i
+               Print *, basis(:,i)
+         end do
         
  
          deallocate(rgrid)
