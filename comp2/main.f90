@@ -70,8 +70,8 @@ program main
          real*8, dimension(:,:), allocatable :: wf
           
          ! create 1D arrays to hold the k_list and l_list to know which basis go where wrt parity
-         real, dimension(:), allocatable :: k_list
-         real, dimension(:), allocatable :: l_list
+         real*8, dimension(:), allocatable :: k_list
+         real*8, dimension(:), allocatable :: l_list
 
          !numerical integration weights
          real*8, dimension(:), allocatable :: weights
@@ -156,7 +156,8 @@ program main
                  B(i,i+1) = -0.5d0*sqrt(1.0d0-( (l*(l+1.0d0)) / ((j+l)*(j+l+1.0d0))))
                  B(i+1,i) = B(i,i+1)
          end do
-    
+         B(num_func,num_func) = 1
+ 
          do i=1,num_func
                  Print *, B(i,:)
          end do 
@@ -184,7 +185,7 @@ program main
          weights(:) = weights(:)*dr/3.0d0
          
          Print *, "WEIGHTS"
-         Print *, weights
+         !Print *, weights
              
          Rn = 0.0d0
          V = 0.0d0
@@ -197,7 +198,7 @@ program main
                          do lam=0, 2*lmax
                                  y_int = Yint(li,m,lam,0.0d0,lj,m)
                                  if(mod(lam,2.0d0) > 0) cycle 
-                                 V(i,j) = V(i,j) + sum(basis(:,j) * min(rgrid(:),Rn/2.0d0)**lam / max(rgrid(:),Rn/2.0d0)**(lam+1) * basis(:,i) * weights(:)) !* y_int
+                                 V(i,j) = V(i,j) + sum(basis(2:,j) * min(rgrid(2:),Rn/2.0d0)**lam / max(rgrid(2:),Rn/2.0d0)**(lam+1) * basis(2:,i) * weights(2:)) * y_int
                                          
                          end do
                          V(i,j) = -2.0d0 * V(i,j)
@@ -214,9 +215,15 @@ program main
          do i=1,num_func
                  Print *, V(i,:)
          end do
+
+         Print *, "H MATRIX::"
+         do i=1,num_func
+                 Print *, H(i,:)
+         end do
                                                    
          call rsg(num_func,num_func,H,B,w,1,z,ier)
 
+         Print *, "Energies:::"
          Print *, w
 
  
