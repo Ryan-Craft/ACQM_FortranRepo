@@ -8,7 +8,7 @@ CFLAGS := $(CFLAGS) -g -Og -fcheck=all -fbacktrace
 #Write your program in main.f90
 
 main : 
-	$(FC) $(CFLAGS) wigner.f rsg.f main.f90 -o main
+	$(FC) $(CFLAGS) sort.f90 wigner.f rsg.f main.f90 -o main
 
 clean : 
 	rm main
