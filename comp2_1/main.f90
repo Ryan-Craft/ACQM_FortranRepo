@@ -130,7 +130,7 @@ program main
                         num_func = num_func + N
                 end do
                 Print *, "NUM FUNC ::: "
-                !Print *, num_func
+                Print *, num_func
 
                 ! create klist and llist for later keeping track of l and k in the basis
                 allocate(k_list(num_func), l_list(num_func))
